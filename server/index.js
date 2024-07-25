@@ -3,11 +3,13 @@ import { Server } from "socket.io";
 import { createServer } from "node:http";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import connectDB from "./config/db.js";
+import cors from "cors";
 
 // Initialiaze express and HTTP sever
 const app = express();
 const httpServer = createServer(app);
+
+app.use(cors());
 
 // connect to Socket.IO server
 const io = new Server(httpServer, {
