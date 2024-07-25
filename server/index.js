@@ -14,10 +14,10 @@ app.use(cors());
 // connect to Socket.IO server
 const io = new Server(httpServer, {
   cors: {
-    origin:
-      process.env.NODE_ENV === "production"
-        ? false
-        : ["http://localhost:5173", "http://127.0.0.1:5173"],
+    origin: "*",
+    // process.env.NODE_ENV === "production"
+    //   ? false
+    //   : ["http://localhost:5173", "http://127.0.0.1:5173"],
   },
 });
 
