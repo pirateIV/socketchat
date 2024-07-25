@@ -1,7 +1,7 @@
 import express from "express";
 import { Server } from "socket.io";
 import { createServer } from "node:http";
-import { dirname } from "node:path";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import connectDB from "./config/db.js";
 
@@ -24,10 +24,6 @@ const io = new Server(httpServer, {
 
 // Define the directoryname
 const __dirname = dirname(fileURLToPath(import.meta.url));
-
-app.get("/", (req, res) => {
-  res.send("<h1>Private messaging</h1>");
-});
 
 // Start the server
 const port = process.env.PORT || 3000;

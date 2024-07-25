@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "client": "vite",
-    "server": "nodemon .",
-    "dev": "concurrently \"npm run client\" \"npm run server\"",
+    "dev": "vite",
+    "server": "nodemon ./server",
+    "dev:server": "concurrently \"npm run client\" \"npm run server\"",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
