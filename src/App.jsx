@@ -18,7 +18,7 @@ const App = () => {
     <>
       <div className="grid grid-cols-[auto,1fr] h-full">
         <Sidebar />
-        <div className="bg-cover bg-[url('./messaging-bg.webp')]">
+        <div className="bg-cover bg-[url('messaging-bg.webp')]">
           <div className="flex flex-col h-full justify-between">
             <Header />
             <div className="h-40 flex-auto overflow-y-auto bg-black/30">
