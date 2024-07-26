@@ -38,14 +38,40 @@ const connectedUsers = new Map();
 io.on("connection", (socket) => {
   console.log(`a user connected ${socket.id}`);
 
+  const clients = io.sockets.adapter.rooms;
+  socket.emit("clients_list", [...clients.keys()]);
+
   // Upon connection
   socket.emit("message", "Welcome to Private Messaging");
 
-  // socket.on("ping", (ping, socketId) => {
-  //   console.log(ping, socketId);
-  // });
+  // Upon connection -only to user
+  socket.broadcast.emit("message", `User ]${socket.id} connected`);
+
+  // Listen for activity
+  socket.on("activity", (name) => {
+    socket.broadcast.emit("activity", name);
+  });
+
+  // receive and emit message back to the client
+  socket.on("chat message", (msg) => {
+    console.log(msg);
+    io.emit("chat message", msg);
+  });
+
+  // get list of connected clients
+  const clientsCount = io.engine.clientsCount;
+  socket.emit("getCount", clientsCount);
+
+  const rooms = io.of("/").adapter.rooms;
+  const sids = io.of("/").adapter.sids;
+
+  io.of("/").adapter.on("create-room", (room) => {
+    console.log(`room ${room} was created`);
+    socket.broadcast.emit("create-room", `room ${room} was created`);
+  });
 
   socket.on("disconnect", (reason) => {
     console.log(`user ${socket.id} disconnected due to ${reason}`);
+    socket.broadcast.emit("message", `User ${socket.id} disconnected`);
   });
 });

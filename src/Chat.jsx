@@ -4,7 +4,7 @@ import { socket } from "./socket";
 const Chat = () => {
   const [chatMessage, setChatMessage] = useState("");
   const [ping, setPing] = useState(0);
-  
+
   useEffect(() => {
     socket.on("message", (msg) => {
       setChatMessage(msg);

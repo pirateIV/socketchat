@@ -2,8 +2,8 @@ import { socket } from "../socket";
 import { useEffect, useState } from "react";
 
 const useSocketConnection = () => {
-  const [isConnected, setIsConnected] = useState(false);
   const [lastActiveTime, setLastActiveTime] = useState(null);
+  const [isConnected, setIsConnected] = useState(socket.connected);
 
   useEffect(() => {
     function onConnect() {
