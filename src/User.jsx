@@ -4,7 +4,7 @@ import ConnectionStatus from "./ConnectionStatus";
 import useSocketConnection from "./hooks/useSocketConnection";
 
 const User = () => {
-  const { isConnected } = useSocketConnection();
+  const { isConnected } = useSocketConnection(socket);
 
   return (
     <div>

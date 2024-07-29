@@ -1,24 +1,32 @@
-import { socket } from "../socket";
 import { useEffect, useState } from "react";
 
-const useSocketConnection = () => {
-  const [lastActiveTime, setLastActiveTime] = useState(null);
+const useSocketConnection = (socket) => {
+  const [lastActive, setLastActive] = useState({ sid: socket.id, time: null });
   const [isConnected, setIsConnected] = useState(socket.connected);
 
   useEffect(() => {
     function onConnect() {
       setIsConnected(true);
+      setLastActive({
+        sid: socket?.id,
+        time: new Date().toLocaleTimeString(),
+      });
+      console.log(`user connected ${socket.id}`);
     }
 
     function onDisconnect() {
       setIsConnected(false);
-      setLastActiveTime(new Date().toLocaleTimeString());
+      setLastActive({
+        ...lastActive,
+        time: new Date().toLocaleTimeString(),
+      });
+      console.log(`user disconnected ${socket.id}`);
     }
 
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
-  }, []);
-  return { isConnected, lastActiveTime };
+  }, [socket]);
+  return { isConnected, lastActive };
 };
 
 export default useSocketConnection;
