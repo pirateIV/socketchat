@@ -71,6 +71,16 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      fontFamily: {
+        sans: ["Inter"],
+        gentium: "Gentium Plus",
+      },
+      gridTemplateColumns: {
+        "auto-1fr": "auto 1fr",
+      },
+      backgroundImage: {
+        "chat-bg": "url('./assets/messaging-bg.webp')",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

@@ -3,6 +3,8 @@ import Header from "./Header";
 import Sidebar from "./Sidebar";
 import TheFooter from "./TheFooter";
 import ChatArea from "./ChatArea";
+import LoginDialog from "./login";
+import { Toaster } from "./components/ui/toaster";
 
 const App = () => {
   window.addEventListener("keydown", (e) => {
@@ -17,16 +19,18 @@ const App = () => {
 
   return (
     <>
-      <div className="grid grid-cols-[auto,1fr] h-full">
+      <div className="grid grid-cols-auto-1fr h-full">
         <Sidebar />
-        <div className="hidden bg-cover bg-chatBg">
+        <div className="bg-cover bg-chat-bg">
           <div className="flex flex-col h-full justify-between">
             <Header />
             <ChatArea />
             <TheFooter />
           </div>
         </div>
+        <LoginDialog />
       </div>
+      <Toaster className="bg-purple-950" />
     </>
   );
 };

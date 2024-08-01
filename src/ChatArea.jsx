@@ -3,6 +3,14 @@ import { useEffect, useState } from "react";
 
 const ChatArea = () => {
   const [activity, setActivity] = useState("");
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    socket.on("user joined", ({ username, numUsers }) => {
+      setMessage(`${username} joined`);
+      console.log(`${username} joined`);
+    });
+  }, [socket]);
 
   let activityTimer;
 
@@ -39,6 +47,7 @@ const ChatArea = () => {
           </div>
         )}
       </div>
+      {message && <div className="bg-white p-3 text-sm">Wale Joined</div>}
     </div>
   );
 };

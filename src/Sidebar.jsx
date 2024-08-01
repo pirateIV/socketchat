@@ -2,7 +2,7 @@ import User from "./User";
 
 const Sidebar = () => {
   return (
-    <aside className="h-full w-64 bg-gradient-to-b from-purple-950/90 to-purple-950 border-r-2 border-purple-500 text-white">
+    <aside>
       <header className="text-3xl p-3 h-24">
         <div i-socket-logo="true"></div>
       </header>

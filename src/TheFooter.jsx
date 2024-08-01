@@ -19,6 +19,10 @@ const TheFooter = () => {
     socket.on("getCount", (clientsCount) => {
       console.log(clientsCount);
     });
+
+    socket.on("user joined", (data) => {
+      console.log(data.username, data.numUsers);
+    });
   }, [socket]);
 
   const sendMessage = (e) => {
