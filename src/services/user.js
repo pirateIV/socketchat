@@ -9,9 +9,8 @@ const create = async (username) => {
     });
 
     const data = await res.json();
-    if (data) {
-      localStorage.setItem("token", data.token);
-    }
+    console.log(data);
+    return data;
   } catch (error) {
     console.log(error);
   }

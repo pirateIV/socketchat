@@ -1,42 +1,58 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { socket } from "./socket";
+import { useEffect, useState } from "react";
 import {
   Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogHeader,
+  DialogDescription,
+  DialogContent,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { socket } from "./socket";
-import { create } from "./services/user";
-import { useToast } from "./components/ui/use-toast";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 
 const LoginDialog = () => {
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(true);
   const [username, setUsername] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [usernameAlreadySelected, setUsernameAlreadySelected] = useState(false);
+
+  useEffect(() => {
+    socket.on("connect_error", (err) => {
+      if (err.message === "invalid username") {
+        setUsernameAlreadySelected(false);
+      }
+    });
+
+    return () => socket.off("connect_error");
+  }, [socket]);
+
+  const handleSocketAuth = () => {
+    setUsernameAlreadySelected(true);
+    socket.auth = { username };
+    socket.connect();
+  };
 
   const handleSubmit = async () => {
     if (username.trim() === "") return;
-    const data = await create(username);
+
+    handleSocketAuth();
+    setIsOpen(false);
+    // await create(username);
 
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
       setIsOpen(false);
-
-      toast({
-        description: "User Created",
-      });
+      toast({ description: "User Created" });
     }, 1000);
   };
+
   return (
-    <Dialog open={isOpen}>
+    <Dialog open={!usernameAlreadySelected}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Create profile</DialogTitle>
@@ -55,16 +71,10 @@ const LoginDialog = () => {
             className="col-span-3"
             placeholder="Enter a username"
             onChange={(e) => setUsername(e.target.value)}
-            p
           />
         </div>
         <DialogFooter>
-          <Button
-            type="submit"
-            isLoading={isLoading}
-            disabled={isLoading}
-            onClick={handleSubmit}
-          >
+          <Button type="submit" disabled={isLoading} onClick={handleSubmit}>
             {isLoading ? "Please wait..." : "Login"}
           </Button>
         </DialogFooter>

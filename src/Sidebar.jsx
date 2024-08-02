@@ -1,6 +1,11 @@
+import { useState } from "react";
 import User from "./User";
 
-const Sidebar = () => {
+const Sidebar = ({ allUsers, selectedUser, setSelectedUser }) => {
+  const handleUserSelect = (userID) => {
+    setSelectedUser(userID);
+  };
+
   return (
     <aside>
       <header className="text-3xl p-3 h-24">
@@ -8,7 +13,14 @@ const Sidebar = () => {
       </header>
 
       <div className="flex flex-col h-[calc(100vh-6rem)] overflow-auto gap-0">
-        <User />
+        {allUsers.map((user) => (
+          <User
+            user={user}
+            key={user.userID}
+            isSelected={user.userID === selectedUser}
+            onSelect={() => handleUserSelect(user.userID)}
+          />
+        ))}
       </div>
     </aside>
   );

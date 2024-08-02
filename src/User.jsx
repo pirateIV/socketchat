@@ -1,24 +1,23 @@
-import { socket } from "./socket";
-import { Link } from "react-router-dom";
 import ConnectionStatus from "./ConnectionStatus";
-import useSocketConnection from "./hooks/useSocketConnection";
 
-const User = () => {
-  const { isConnected } = useSocketConnection(socket);
-
+const User = ({ user, isSelected, onSelect }) => {
   return (
-    <div>
-      {socket.id ? (
-        <Link to={socket.id} className="block bg-blue-200/15 py-4 px-2.5">
-          <div className="flex items-center gap-3">
-            <p className="font-bold font-gentium text-sm">
-              <span>{socket.id?.substring(0, 14)} </span>
-              <span className="text-xs opacity-65">(Yourself)</span>
-            </p>
-          </div>
-          <ConnectionStatus isConnected={isConnected} />
-        </Link>
-      ) : null}
+    <div
+      onClick={onSelect}
+      className={`user ${isSelected ? "bg-blue-300/15" : ""} py-4 px-2.5`}
+    >
+      <div className="description">
+        <div className="name flex items-center gap-3">
+          <p className="font-gentium font-bold text-sm">
+            <span>{user.username} </span>
+            <span className="text-xs opacity-65">
+              {user.self && "(Yourself)"}
+            </span>
+          </p>
+        </div>
+        <ConnectionStatus isConnected={user.connected} />
+      </div>
+      {user.hasNewMessages && <div className="new-messages">!</div>}
     </div>
   );
 };

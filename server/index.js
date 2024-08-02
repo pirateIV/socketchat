@@ -12,6 +12,7 @@ const app = express();
 const httpServer = createServer(app);
 
 app.use(cors());
+app.use(express.json());
 
 // connect to Socket.IO server
 const io = new Server(httpServer, {
@@ -21,7 +22,7 @@ const io = new Server(httpServer, {
 });
 
 // connnect to database
-connectDB();
+// connectDB();
 
 // Define the directoryname
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -32,41 +33,56 @@ httpServer.listen(port, () => {
   console.log(`Server running on port ${3000}`);
 });
 
-app.post("/login", async (req, res) => {
-  const username = req.body;
+// app.post("/login", async (req, res, next) => {
+//   const { username } = req.body;
+//   console.log(req.body);
+//   if (!username) {
+//     return next(new Error("Username is missing"));
+//   }
 
-  const token = authorizeUser(username);
-  res.status(201).json({ message: "user created", token });
-});
+//   const token = authorizeUser(username);
+//   res.status(201).json({ message: "user created", token });
+// });
+
+const secretKey = "@e./!?>&%$&O@edexaqwef00//.";
 
 const authorizeUser = (username) => {
-  const secretKey = "@e./!?>&%$&O@edexaqwef00//.";
+  const payload = { username };
   const options = { expiresIn: "1h" };
 
-  const token = jwt.sign({ username }, secretKey, options);
+  const token = jwt.sign(payload, secretKey, options);
 
   return token;
 };
 
+io.use((socket, next) => {
+  const { username } = socket.handshake.auth;
+  if (!username) {
+    return next(new Error("invalid username"));
+  }
+  console.log(username);
+  socket.username = username;
+  next();
+});
+
 io.on("connection", (socket) => {
-  console.log(`user ${socket.id} connected`);
+  // fetch existing users
+  const users = [];
+  for (let [id, socket] of io.of("/").sockets) {
+    users.push({
+      userID: id,
+      username: socket.username,
+    });
+  }
+  socket.emit("users", users);
 
-  socket.on("add user", (username) => {
-    if (!username) {
-      return new Error("invalid username");
-    }
-
-    authorizeUser(username);
-
-    socket.handshake.auth.username = username;
-    console.log(socket.handshake.auth.username);
+  // notify existing users
+  socket.broadcast.emit("user connected", {
+    userID: socket.id,
+    username: socket.username,
   });
 
   socket.on("disconnect", (reason) => {
     console.log(`user ${socket.id} disconnected due to ${reason}`);
   });
 });
-
-// io.use((socket, next) => {
-//   const token = socket.handshake.query.token;
-// });
