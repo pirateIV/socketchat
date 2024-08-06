@@ -82,6 +82,24 @@ io.on("connection", (socket) => {
     username: socket.username,
   });
 
+  // forward private message to the right recipient
+  socket.on("private message", ({ content, to }) => {
+    // the "private message" event will broadcast to "user socket id" except this socket
+    socket.to(to).emit("private message", {
+      content,
+      from: socket.id,
+    });
+
+    /**
+     * The code above is equivalent to:
+     *
+     * socket.to(to).except(socket.id).emit("private message", {
+     *    content,
+     *    from: socket.id
+     * })
+     */
+  });
+
   socket.on("disconnect", (reason) => {
     console.log(`user ${socket.id} disconnected due to ${reason}`);
   });

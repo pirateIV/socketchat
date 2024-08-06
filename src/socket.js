@@ -4,7 +4,7 @@ const token = localStorage.getItem("token");
 
 const URL =
   process.env.NODE_ENV === "production"
-    ? process.env.VITE_SERVER_URL
+    ? "https://socketchat-xe13.onrender.com"
     : "http://localhost:3000";
 
 export const socket = io(URL, {

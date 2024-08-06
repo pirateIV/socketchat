@@ -1,24 +1,24 @@
 import { useState } from "react";
 import User from "./User";
 
-const Sidebar = ({ allUsers, selectedUser, setSelectedUser }) => {
-  const handleUserSelect = (userID) => {
-    setSelectedUser(userID);
+const Sidebar = ({ users, selectedUser, setSelectedUser }) => {
+  const handleUserSelect = (user) => {
+    setSelectedUser(user);
   };
 
   return (
     <aside>
-      <header className="text-3xl p-3 h-24">
-        <div i-socket-logo="true"></div>
+      <header className="h-24 p-3 text-3xl">
+        <div i-socket-logo=""></div>
       </header>
 
       <div className="flex flex-col h-[calc(100vh-6rem)] overflow-auto gap-0">
-        {allUsers.map((user) => (
+        {users.map((user) => (
           <User
             user={user}
             key={user.userID}
-            isSelected={user.userID === selectedUser}
-            onSelect={() => handleUserSelect(user.userID)}
+            onSelect={() => handleUserSelect(user)}
+            isSelected={user.userID === selectedUser?.userID}
           />
         ))}
       </div>

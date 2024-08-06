@@ -6,35 +6,12 @@ const TheFooter = () => {
   const [chatMessage, setChatMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
-  useEffect(() => {
-    socket.on("chat message", (msg) => {
-      console.log(msg);
-      setMessages([...messages, msg]);
-    });
-
-    socket.on("clients_list", (clientsList) => {
-      console.log(clientsList);
-    });
-
-    socket.on("getCount", (clientsCount) => {
-      console.log(clientsCount);
-    });
-
-    socket.on("user joined", (data) => {
-      console.log(data.username, data.numUsers);
-    });
-  }, [socket]);
+  useEffect(() => {}, [socket]);
 
   const sendMessage = (e) => {
     e.preventDefault();
 
     if (!chatMessage) return;
-    socket.emit("chat message", {
-      chatMessage,
-      id: socket.id,
-      date: new Date().getTime(),
-      sentAt: new Date().toLocaleTimeString(),
-    });
   };
 
   const emitActivity = () => {
