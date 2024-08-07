@@ -36,7 +36,8 @@ const LoginDialog = () => {
     socket.connect();
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (username.trim() === "") return;
 
     handleSocketAuth();
@@ -61,23 +62,29 @@ const LoginDialog = () => {
             if the connection is interrupted.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid grid-cols-4 items-center gap-4">
-          <Label htmlFor="username" className="text-right">
-            Username
-          </Label>
-          <Input
-            id="username"
-            value={username}
-            className="col-span-3"
-            placeholder="Enter a username"
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </div>
-        <DialogFooter>
-          <Button type="submit" disabled={isLoading} onClick={handleSubmit}>
-            {isLoading ? "Please wait..." : "Login"}
-          </Button>
-        </DialogFooter>
+        <form onSubmit={handleSubmit} className="space-y-2">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="username" className="text-right">
+              Username
+            </Label>
+            <Input
+              id="username"
+              value={username}
+              className="col-span-3"
+              placeholder="Enter a username"
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              type="submit"
+              className="bg-purple-800 hover:bg-purple-700"
+              disabled={isLoading}
+            >
+              {isLoading ? "Please wait..." : "Login"}
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

@@ -4,8 +4,6 @@ import { socket } from "./socket";
 const ChatArea = ({ users, selectedUser }) => {
   const [message, setMessage] = useState("");
 
-  useEffect(() => {}, []);
-
   const handleOnMessage = (e, content) => {
     e.preventDefault();
 
@@ -15,13 +13,43 @@ const ChatArea = ({ users, selectedUser }) => {
         to: selectedUser.userID,
       });
       selectedUser.messages.push({ content, fromSelf: true });
-      console.log(selectedUser);
+      setMessage("");
     }
   };
+
+  const displaySender = (messages, index) => {
+    const currentMessage = messages[index];
+    const previousMessage = messages[index - 1];
+    if (index === 0 || currentMessage.fromSelf !== previousMessage.fromSelf) {
+      return currentMessage.fromSelf ? "(Yourself)" : selectedUser.username;
+    }
+    return null;
+  };
+
   return (
     <>
       <div className="h-40 flex-auto overflow-y-auto bg-black/30">
-        <div className="p-5 text-center"></div>
+        <div className="m-3">
+          <ul className="messages">
+            {selectedUser.messages.map((msg, i) => (
+              <li
+                key={i}
+                className={`flex ${msg.fromSelf ? "text-right justify-end *:ps-12" : "text-left justify-start *:pe-10"}`}
+              >
+                <div className="bg-white py-1 px-3 my-0.5 rounded-md">
+                  <dl>
+                    {displaySender(selectedUser.messages, i) && (
+                      <strong className="w-max text-sm font-bold">
+                        {displaySender(selectedUser.messages, i)}
+                      </strong>
+                    )}
+                  </dl>
+                  <dt>{msg.content}</dt>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
       <footer className="bg-black/30 p-3">
         <form onSubmit={(e) => handleOnMessage(e, message)}>

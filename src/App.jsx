@@ -31,10 +31,32 @@ const App = () => {
       );
     });
 
+    socket.on("private message", ({ content, from }) => {
+      setUsers((prevUsers) =>
+        prevUsers.map((user) => {
+          if (user.userID === from) {
+            user.messages.push({
+              content,
+              fromSelf: false,
+            });
+            user.hasNewMessages = user !== selectedUser;
+            return user;
+          }
+          return user;
+        }),
+      );
+    });
+
     socket.on("user connected", (user) => {
       initReactiveProperties(user);
       setUsers((prevUsers) => [...prevUsers, user]);
     });
+
+    return () => {
+      socket.off("users");
+      socket.off("user connected");
+      socket.off("private message");
+    };
   }, [socket]);
 
   const initReactiveProperties = (user) => {
