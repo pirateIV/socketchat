@@ -3,9 +3,9 @@ import { Server } from "socket.io";
 import { createServer } from "node:http";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import crypto from "crypto";
 import cors from "cors";
-import connectDB from "./config/db.js";
-import jwt from "jsonwebtoken";
+import { InMemorySessionStore } from "./sessionStore.js";
 
 // Initialiaze express and HTTP sever
 const app = express();
@@ -21,9 +21,6 @@ const io = new Server(httpServer, {
   },
 });
 
-// connnect to database
-// connectDB();
-
 // Define the directoryname
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -33,39 +30,48 @@ httpServer.listen(port, () => {
   console.log(`Server running on port ${3000}`);
 });
 
-// app.post("/login", async (req, res, next) => {
-//   const { username } = req.body;
-//   console.log(req.body);
-//   if (!username) {
-//     return next(new Error("Username is missing"));
-//   }
-
-//   const token = authorizeUser(username);
-//   res.status(201).json({ message: "user created", token });
-// });
-
-const secretKey = "@e./!?>&%$&O@edexaqwef00//.";
-
-const authorizeUser = (username) => {
-  const payload = { username };
-  const options = { expiresIn: "1h" };
-
-  const token = jwt.sign(payload, secretKey, options);
-
-  return token;
-};
+const randomID = () => crypto.randomBytes(8).toString("hex");
+const sessionStore = new InMemorySessionStore();
 
 io.use((socket, next) => {
-  const { username } = socket.handshake.auth;
+  const { sessionID, username } = socket.handshake.auth;
+
+  if (sessionID) {
+    const session = sessionStore.findSession(sessionID);
+    if (session) {
+      socket.sessionID = sessionID;
+      socket.userID = session.userID;
+      socket.username = session.username;
+      return next();
+    }
+  }
+
   if (!username) {
     return next(new Error("invalid username"));
   }
-  console.log(username);
+  socket.sessionID = randomID();
+  socket.userID = randomID();
   socket.username = username;
   next();
 });
 
 io.on("connection", (socket) => {
+  // persist session
+  sessionStore.saveSession(socket.sessionID, {
+    userID: socket.userID,
+    username: socket.username,
+    connected: true,
+  });
+
+  // emit session details
+  socket.emit("session", {
+    sessionID: socket.sessionID,
+    userID: socket.userID,
+  });
+
+  // join the "userID" room
+  socket.join(socket.userID);
+
   // fetch existing users
   const users = [];
   for (let [id, socket] of io.of("/").sockets) {
@@ -89,18 +95,10 @@ io.on("connection", (socket) => {
       content,
       from: socket.id,
     });
-
-    /**
-     * The code above is equivalent to:
-     *
-     * socket.to(to).except(socket.id).emit("private message", {
-     *    content,
-     *    from: socket.id
-     * })
-     */
   });
 
   socket.on("disconnect", (reason) => {
     console.log(`user ${socket.id} disconnected due to ${reason}`);
+    socket.broadcast.emit("user disconnected", socket.id);
   });
 });

@@ -13,6 +13,12 @@ const App = () => {
 
   const sidebarProps = { users, selectedUser, setSelectedUser };
 
+  const initReactiveProperties = (user) => {
+    user.connected = true;
+    user.messages = [];
+    user.hasNewMessages = false;
+  };
+
   useEffect(() => {
     socket.on("users", (users) => {
       users.forEach((user) => {
@@ -31,6 +37,15 @@ const App = () => {
       );
     });
 
+    socket.on("session", ({ sessionID, userID }) => {
+      // attatch the sessionID to the next reconnection attempt
+      socket.auth = { sessionID };
+      // store it in the localStorage
+      localStorage.setItem("sessionID", sessionID);
+      // save the ID of the user
+      socket.userID = userID;
+    });
+
     socket.on("private message", ({ content, from }) => {
       setUsers((prevUsers) =>
         prevUsers.map((user) => {
@@ -39,7 +54,9 @@ const App = () => {
               content,
               fromSelf: false,
             });
-            user.hasNewMessages = user !== selectedUser;
+            if (user !== selectedUser) {
+              user.hasNewMessages = true;
+            }
             return user;
           }
           return user;
@@ -52,18 +69,59 @@ const App = () => {
       setUsers((prevUsers) => [...prevUsers, user]);
     });
 
+    // socket.on("connect", () => {
+    //   setUsers((prevUsers) =>
+    //     prevUsers.map((user) => {
+    //       if (user.self) {
+    //         user.connected = true;
+    //         return user;
+    //       }
+
+    //       return user;
+    //     }),
+    //   );
+    // });
+
+    socket.on("disconnect", () => {
+      setUsers((prevUsers) =>
+        prevUsers.map((user) => {
+          if (user.self) {
+            user.connected = false;
+            return user;
+          }
+          return user;
+        }),
+      );
+    });
+
+    socket.on("user disconnected", (id) => {
+      setUsers((prevUsers) =>
+        prevUsers.map((user) => {
+          if (user.userID === id) {
+            user.connected = false;
+            return user;
+          }
+          return user;
+        }),
+      );
+    });
+
     return () => {
       socket.off("users");
       socket.off("user connected");
+      socket.off("user disconnected");
       socket.off("private message");
+      socket.off("connnect");
+      socket.off("disconnect");
     };
   }, [socket]);
 
-  const initReactiveProperties = (user) => {
-    user.connected = true;
-    user.messages = [];
-    user.hasNewMessages = false;
-  };
+  window.addEventListener("keypress", (e) => {
+    if (e.target.matches("textarea")) return;
+
+    if (e.key === "c") socket.connect();
+    if (e.key === "d") socket.disconnect();
+  });
 
   return (
     <ChatContainer>

@@ -36,7 +36,7 @@ const ChatArea = ({ users, selectedUser }) => {
                 key={i}
                 className={`flex ${msg.fromSelf ? "text-right justify-end *:ps-12" : "text-left justify-start *:pe-10"}`}
               >
-                <div className="bg-white py-1 px-3 my-0.5 rounded-md">
+                <div className="bg-white shadow-sm shadow-black/30 py-1 px-3 my-0.5 rounded-md">
                   <dl>
                     {displaySender(selectedUser.messages, i) && (
                       <strong className="w-max text-sm font-bold">
@@ -59,6 +59,7 @@ const ChatArea = ({ users, selectedUser }) => {
             </label>
             <textarea
               rows="4"
+              value={message}
               maxLength="2000"
               autoCorrect="true"
               placeholder="Send a message..."

@@ -4,6 +4,7 @@ import User from "./User";
 const Sidebar = ({ users, selectedUser, setSelectedUser }) => {
   const handleUserSelect = (user) => {
     setSelectedUser(user);
+    user.hasNewMessages = false;
   };
 
   return (
@@ -18,7 +19,7 @@ const Sidebar = ({ users, selectedUser, setSelectedUser }) => {
             user={user}
             key={user.userID}
             onSelect={() => handleUserSelect(user)}
-            isSelected={user.userID === selectedUser?.userID}
+            isSelected={user?.userID === selectedUser?.userID}
           />
         ))}
       </div>

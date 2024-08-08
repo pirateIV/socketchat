@@ -6,7 +6,7 @@ const User = ({ user, isSelected, onSelect }) => {
       onClick={onSelect}
       className={`user ${isSelected ? "bg-blue-300/15" : ""} py-4 px-2.5`}
     >
-      <div className="description">
+      <div className="relative">
         <div className="name flex items-center gap-3">
           <p className="font-gentium font-bold text-sm">
             <span>{user.username} </span>
@@ -16,8 +16,8 @@ const User = ({ user, isSelected, onSelect }) => {
           </p>
         </div>
         <ConnectionStatus isConnected={user.connected} />
+        {user.hasNewMessages && <div className="new-messages">!</div>}
       </div>
-      {user.hasNewMessages && <div className="new-messages">!</div>}
     </div>
   );
 };

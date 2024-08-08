@@ -80,6 +80,10 @@
     @apply bg-green-500 shadow-green-400;
   }
 
+  .new-messages {
+    @apply absolute right-3 bottom-1 bg-red-500 px-3 py-1 rounded-full text-sm;
+  }
+
   svg {
     display: none;
   }
