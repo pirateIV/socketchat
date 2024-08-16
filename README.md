@@ -1,8 +1,45 @@
-# React + Vite
+# Socket.io Chat App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple chat application built using [Socket.io](https://socket.io), [React](https://react.dev) and [Node.js](https://nodejs.org).
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [x] Real-time chat functionality.
+- [x] Save user session.
+- [x] Unread messages indicator.
+
+- [ ] Persistent messages.
+- [ ] Group Chat functionality.
+- [ ] Push Notification for new messages.
+- [ ] Add [Redis](https://redis.io/) for scaling Socket.io servers.
+
+## Installation {#installation}
+
+- Make sure you have [Node.js](https://nodejs.org) installed on your machine.
+- Clone the repository:
+
+```bash
+git clone https://github.com/pirateIV/socketchat
+```
+
+- Navigate to the project directory:
+
+```bash
+cd socketchat
+```
+
+- Install the depencies:
+
+```bash
+npm install
+```
+
+- Run Server and Client concurrently, using this command:
+
+```bash
+npm run dev:server
+```
+
+## License {#license}
+
+This project is distributed under the terms of [MIT License](LICENSE).
