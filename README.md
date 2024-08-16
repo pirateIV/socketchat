@@ -2,7 +2,7 @@
 
 A simple chat application built using [Socket.io](https://socket.io), [React](https://react.dev) and [Node.js](https://nodejs.org).
 
-- [Live Demo](https://socket-chat.vercel.app/)
+- [Live Demo](https://socket-chat-ix.vercel.app/)
 - [Features](#features)
 - [Installation](#installation)
 - [License](#license)
