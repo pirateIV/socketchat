@@ -1,24 +1,21 @@
-import ConnectionStatus from "./ConnectionStatus";
+import UserAvatar from "./components/user/UserAvatar";
+import UserStatus from "./components/user/UserStatus";
 
-const User = ({ user, isSelected, onSelect }) => {
+const User = ({ user, selected, onSelect }) => {
   return (
-    <div
+    <a
+      title={user.name}
       onClick={onSelect}
-      className={`user ${isSelected ? "bg-blue-300/15" : ""} py-4 px-2.5`}
+      className={`user transition-all duration-500 ${selected ? "selected" : ""}`}
     >
-      <div className="relative">
-        <div className="name flex items-center gap-3">
-          <p className="font-gentium font-bold text-sm">
-            <span>{user.username} </span>
-            <span className="text-xs opacity-65">
-              {user.self && "(Yourself)"}
-            </span>
-          </p>
+      <div className="flex items-center ms-3 gap-1.5">
+        <UserAvatar name={user.name} imgSrc={user.imgSrc} />
+        <div className="px-2 py-3">
+          <div className="user-name text-white">{user.name}</div>
+          <UserStatus user={user} />
         </div>
-        <ConnectionStatus isConnected={user.connected} />
-        {user.hasNewMessages && <div className="new-messages">!</div>}
       </div>
-    </div>
+    </a>
   );
 };
 

@@ -17,7 +17,7 @@ app.use(express.json());
 // connect to Socket.IO server
 const io = new Server(httpServer, {
   cors: {
-    origin: ["http://localhost:5174", "https://socket-chat-ix.vercel.app"],
+    origin: ["http://localhost:5173", "https://socket-chat-ix.vercel.app"],
   },
 });
 
