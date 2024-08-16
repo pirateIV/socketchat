@@ -9,7 +9,7 @@ const Sidebar = ({ users, selectedUser, setSelectedUser }) => {
 
   return (
     <aside>
-      <header className="h-24 p-3 text-3xl">
+      <header className="h-24 p-3 text-4xl">
         <div i-socket-logo=""></div>
       </header>
 
