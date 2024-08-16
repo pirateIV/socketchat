@@ -88,12 +88,12 @@ io.on("connection", (socket) => {
     username: socket.username,
   });
 
-  // forward private message to the right recipient
+  // forward private message to the right recipient (and to other tabs of the sender)
   socket.on("private message", ({ content, to }) => {
-    // the "private message" event will broadcast to "user socket id" except this socket
-    socket.to(to).emit("private message", {
+    socket.to(to).to(socket.userID).emit("private message", {
       content,
       from: socket.id,
+      to,
     });
   });
 

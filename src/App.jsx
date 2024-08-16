@@ -46,13 +46,14 @@ const App = () => {
       socket.userID = userID;
     });
 
-    socket.on("private message", ({ content, from }) => {
+    socket.on("private message", ({ content, from, to }) => {
       setUsers((prevUsers) =>
         prevUsers.map((user) => {
-          if (user.userID === from) {
+          const fromSelf = socket.userID === from;
+          if (user.userID === fromSelf ? to : from) {
             user.messages.push({
               content,
-              fromSelf: false,
+              fromSelf,
             });
             if (user !== selectedUser) {
               user.hasNewMessages = true;
@@ -68,19 +69,6 @@ const App = () => {
       initReactiveProperties(user);
       setUsers((prevUsers) => [...prevUsers, user]);
     });
-
-    // socket.on("connect", () => {
-    //   setUsers((prevUsers) =>
-    //     prevUsers.map((user) => {
-    //       if (user.self) {
-    //         user.connected = true;
-    //         return user;
-    //       }
-
-    //       return user;
-    //     }),
-    //   );
-    // });
 
     socket.on("disconnect", () => {
       setUsers((prevUsers) =>
