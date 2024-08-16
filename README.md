@@ -40,6 +40,8 @@ npm install
 npm run dev:server
 ```
 
+- Start app at specified port.
+
 ## License {#license}
 
 This project is distributed under the terms of [MIT License](LICENSE).
