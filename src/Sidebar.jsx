@@ -4,11 +4,12 @@ import User from "./User";
 const Sidebar = ({ users, selectedUser, setSelectedUser }) => {
   const handleUserSelect = (user) => {
     setSelectedUser(user);
+    user.hasNewMessages = false;
   };
 
   return (
     <aside>
-      <header className="h-24 p-3 text-3xl">
+      <header className="h-24 p-3 text-4xl">
         <div i-socket-logo=""></div>
       </header>
 
@@ -18,7 +19,7 @@ const Sidebar = ({ users, selectedUser, setSelectedUser }) => {
             user={user}
             key={user.userID}
             onSelect={() => handleUserSelect(user)}
-            isSelected={user.userID === selectedUser?.userID}
+            isSelected={user?.userID === selectedUser?.userID}
           />
         ))}
       </div>

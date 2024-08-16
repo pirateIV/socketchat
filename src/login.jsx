@@ -20,6 +20,16 @@ const LoginDialog = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [usernameAlreadySelected, setUsernameAlreadySelected] = useState(false);
 
+  const sessionID = localStorage.getItem("sessionID");
+
+  useEffect(() => {
+    if (sessionID) {
+      setUsernameAlreadySelected(true);
+      socket.auth = { sessionID };
+      socket.connect();
+    }
+  }, [sessionID]);
+
   useEffect(() => {
     socket.on("connect_error", (err) => {
       if (err.message === "invalid username") {
