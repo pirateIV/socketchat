@@ -1,6 +1,3 @@
-import { socket } from "./socket";
-import useSocketConnection from "./hooks/useSocketConnection";
-
 const Header = ({ selectedUser }) => {
   return (
     <header>

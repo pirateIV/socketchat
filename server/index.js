@@ -1,7 +1,7 @@
 import express from "express";
 import { Server } from "socket.io";
 import { createServer } from "node:http";
-import { dirname, join } from "node:path";
+import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import crypto from "crypto";
 import cors from "cors";
@@ -17,7 +17,7 @@ app.use(express.json());
 // connect to Socket.IO server
 const io = new Server(httpServer, {
   cors: {
-    origin: "*",
+    origin: ["http://localhost:5174", "https://socket-chat-ix.vercel.app"],
   },
 });
 
