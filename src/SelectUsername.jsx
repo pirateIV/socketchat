@@ -1,8 +1,8 @@
+import { socket } from "@/socket";
 import { twMerge } from "tailwind-merge";
-import { Input } from "./components/ui/input";
 import { useEffect, useState } from "react";
-import SocketLogoAnimate from "./SocketLogoAnimate";
-import { socket } from "./socket";
+import { Input } from "@/components/ui/input";
+import SocketLogoAnimate from "@/SocketLogoAnimate";
 
 const SelectUsername = ({ username, setUsername, setUserSelected }) => {
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
@@ -10,8 +10,8 @@ const SelectUsername = ({ username, setUsername, setUserSelected }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsAnimatingOut(true);
-    socket.connect();
     socket.auth = { username };
+    socket.connect();
   };
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const SelectUsername = ({ username, setUsername, setUserSelected }) => {
     <div
       id="select-username"
       className={twMerge([
-        "min-h-screen flex flex-col items-center justify-center text-white",
+        "min-h-screen absolute inset-0 flex flex-col items-center justify-center text-white",
         "transition-all duration-500 bg-gradient-to-b from-blue-500 to-indigo-600",
         isAnimatingOut ? "opacity-0 scale-95" : "opacity-100 scale-100",
       ])}
@@ -43,6 +43,7 @@ const SelectUsername = ({ username, setUsername, setUserSelected }) => {
         <Input
           type="text"
           value={username}
+          autoFocus={true}
           placeholder="Enter username..."
           className={twMerge([
             "text-black px-4 py-3 w-full border border-gray-300 rounded-sm p-2",

@@ -2,17 +2,24 @@ import UserAvatar from "./components/user/UserAvatar";
 import UserStatus from "./components/user/UserStatus";
 
 const User = ({ user, selected, onSelect }) => {
+  const { username, self, imgSrc, connected, hasNewMessages } = user;
+
   return (
     <a
-      title={user.name}
+      title={username}
       onClick={onSelect}
-      className={`user transition-all duration-500 ${selected ? "selected" : ""}`}
+      className={`user transition-all duration-500 me-1.5 ${selected ? "selected" : ""}`}
     >
       <div className="flex items-center ms-3 gap-1.5">
-        <UserAvatar name={user.name} imgSrc={user.imgSrc} />
+        <UserAvatar username={username} imgSrc={imgSrc} />
         <div className="px-2 py-3">
-          <div className="user-name text-white">{user.name}</div>
-          <UserStatus user={user} />
+          <div className="user-name text-white">
+            {username}&nbsp;
+            <strong className="!text-sm font-gentium text-gray-200">
+              {self ? "(Yourself)" : ""}
+            </strong>
+          </div>
+          <UserStatus connected={connected} hasNewMessages={hasNewMessages} />
         </div>
       </div>
     </a>

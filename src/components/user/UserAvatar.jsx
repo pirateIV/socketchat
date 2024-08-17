@@ -18,23 +18,25 @@ const avatarVariants = cva(
   },
 );
 
-const UserAvatar = React.forwardRef(({ name, imgSrc, size, fontSize }, ref) => {
-  return (
-    <div className={cn(avatarVariants({ size }))} ref={ref}>
-      {!imgSrc ? (
-        <span
-          className={twMerge([
-            `${fontSize === "lg" ? "text-2xl" : "text-md"}`,
-            "flex-shrink-0 font-medium text-gray-600 dark:text-gray-300",
-          ])}
-        >
-          {name.charAt(0)}
-        </span>
-      ) : (
-        <img src={imgSrc} className="flex-shrink-0" alt={name} />
-      )}
-    </div>
-  );
-});
+const UserAvatar = React.forwardRef(
+  ({ username, imgSrc, size, fontSize }, ref) => {
+    return (
+      <div className={cn(avatarVariants({ size }))} ref={ref}>
+        {!imgSrc ? (
+          <span
+            className={twMerge([
+              `${fontSize === "lg" ? "text-2xl" : "text-md"}`,
+              "flex-shrink-0 capitalize font-medium text-gray-600 dark:text-gray-300",
+            ])}
+          >
+            {username.charAt(0)}
+          </span>
+        ) : (
+          <img src={imgSrc} className="flex-shrink-0" alt={username} />
+        )}
+      </div>
+    );
+  },
+);
 
 export default UserAvatar;
