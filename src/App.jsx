@@ -19,7 +19,7 @@ const App = () => {
       )}
       <div className="flex absolute bottom-5 right-5 items-center gap-3">
         <a href="https://vercel.com" title="Go to vercel">
-          <VercelIcon />
+        <VercelIcon />
         </a>
         <a href="http://github.com/" title="Visit Repository on Github">
           <div
