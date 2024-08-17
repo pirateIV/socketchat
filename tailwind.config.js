@@ -72,7 +72,8 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       fontFamily: {
-        sans: ["Inter"],
+        sans: ["Inter Tight"],
+        "dm-sans": ["DM Sans"],
         gentium: "Gentium Plus",
       },
       gridTemplateColumns: {
