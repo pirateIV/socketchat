@@ -64,7 +64,31 @@ const Chat = () => {
         user.self = socket.id === user.userID;
         initReactiveProperties(user);
       });
-      setUsers((prevUsers) => [...prevUsers, ...users]);
+      // setUsers((prevUsers) => [...prevUsers, ...users]);
+
+      setUsers(
+        users.sort((a, b) => {
+          if (a.self) return -1;
+          if (b.self) return 1;
+          if (a.username < b.username) return -1;
+          return a.username > b.username ? 1 : 0;
+        }),
+      );
+    });
+
+    socket.on("private message", ({ message, from }) => {
+      setUsers((prevUsers) =>
+        prevUsers.map((user) => {
+          if (user.self === from) {
+            user.messages.push({ message, fromSelf: true });
+            if (user !== selectedUser) {
+              user.hasNewMessages = true;
+            }
+            return user;
+          }
+          return user;
+        }),
+      );
     });
 
     socket.on("user connected", (user) => {
@@ -87,7 +111,11 @@ const Chat = () => {
 
   const handlePrivateMessage = (e) => {
     e.preventDefault();
-    console.log("form submitted...", message);
+
+    socket.emit("private message", {
+      message,
+      to: selectedUser.userID,
+    });
     setMessage("");
     // ...
   };
@@ -108,7 +136,7 @@ const Chat = () => {
       <div className="grid grid-cols-auto-1fr">
         <Users {...usersProps} />
         {selectedUser && (
-          <div className="flex-1 bg-gray-600 p-5">
+          <div className="flex-1 bg-gradient-to-b from-gray-200 to-gray-300 p-5">
             <header className="selected-user-header bg-white shadow-black shadow-sm rounded-md p-4 flex items-center space-x-4">
               <div className="flex-shrink-0">
                 <UserAvatar
@@ -131,6 +159,12 @@ const Chat = () => {
                 />
               </div>
             </header>
+
+            <section className="messages">
+              {messages.map((msg) => (
+                <div>{msg}</div>
+              ))}
+            </section>
 
             <section>
               <div className="mt-5">

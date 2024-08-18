@@ -1,11 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Chat from "./Chat";
 import SelectUsername from "./SelectUsername";
 import VercelIcon from "./components/icons/VercelIcon";
+import { socket } from "./socket";
 
 const App = () => {
-  const [username, setUsername] = useState("John");
+  const [username, setUsername] = useState("User");
   const [userSelected, setUserSelected] = useState(false);
+
+  useEffect(() => {
+    socket.on("connect_error", (err) => {
+      if (err.message === "Invalid username") {
+        setUserSelected(false);
+      }
+    });
+
+    return () => {
+      socket.off("connect_error");
+    };
+  }, [socket]);
 
   return (
     <div className="relative">
@@ -21,10 +34,13 @@ const App = () => {
         <a href="https://vercel.com" title="Go to vercel">
           <VercelIcon />
         </a>
-        <a href="http://github.com/" title="Visit Repository on Github">
+        <a
+          href="https://github.com/pirateIV/socketchat"
+          title="Visit Repository on Github"
+        >
           <div
             i-simple-icons:github=""
-            className="text-gray-800 text-lg transition duration-300 hover:text-gray-900"
+            className={`${userSelected ? "text-gray-800" : "text-white"} text-lg transition duration-300 hover:scale-125`}
           ></div>
         </a>
       </div>
