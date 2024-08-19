@@ -3,7 +3,9 @@ import { Server } from "socket.io";
 
 const httpServer = http.createServer();
 const io = new Server(httpServer, {
-  cors: { origin: ["http://localhost:5173"] },
+  cors: {
+    origin: ["http://localhost:5173", "https://socket-chat-ix.vercel.app"],
+  },
 });
 
 io.use((socket, next) => {
