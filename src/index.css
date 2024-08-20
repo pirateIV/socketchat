@@ -122,10 +122,6 @@
     @apply shadow-md;
   }
 
-  svg {
-    /* display: none; */
-  }
-
   form button[type="submit"]:disabled {
     cursor: not-allowed !important;
   }

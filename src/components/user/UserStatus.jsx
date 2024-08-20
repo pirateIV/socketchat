@@ -1,4 +1,4 @@
-const UserStatus = ({ connected, hasNewMessages }) => {
+const UserStatus = ({ connected, hasNewMessages, unreadMessages }) => {
   return (
     <div className="user-status">
       <div className="flex items-center justify-between">
@@ -8,7 +8,7 @@ const UserStatus = ({ connected, hasNewMessages }) => {
             {connected ? "online" : "offline"}
           </small>
         </div>
-        {hasNewMessages && <div className="new-messages">10</div>}
+        {hasNewMessages && <div className="new-messages">👶🏾</div>}
       </div>
     </div>
   );

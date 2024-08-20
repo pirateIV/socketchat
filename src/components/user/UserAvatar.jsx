@@ -25,8 +25,8 @@ const UserAvatar = React.forwardRef(
         {!imgSrc ? (
           <span
             className={twMerge([
-              `${fontSize === "lg" ? "text-2xl" : "text-md"}`,
-              "flex-shrink-0 capitalize font-medium text-gray-600 dark:text-gray-300",
+              `${fontSize === "lg" ? "text-2xl" : "text-md"} flex-shrink-0`,
+              "capitalize font-medium text-gray-600 dark:text-gray-300",
             ])}
           >
             {username.charAt(0)}

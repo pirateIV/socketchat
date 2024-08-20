@@ -23,6 +23,7 @@ const App = () => {
   return (
     <div className="relative">
       <Chat />
+
       {!userSelected && (
         <SelectUsername
           username={username}
@@ -30,10 +31,12 @@ const App = () => {
           setUserSelected={setUserSelected}
         />
       )}
+
       <div className="flex absolute bottom-7 right-7 items-center gap-3">
         <a href="https://vercel.com" title="Go to vercel">
           <VercelIcon />
         </a>
+
         <a
           href="https://github.com/pirateIV/socketchat"
           title="Visit Repository on Github"

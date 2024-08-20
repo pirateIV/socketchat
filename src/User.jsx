@@ -2,7 +2,8 @@ import UserAvatar from "./components/user/UserAvatar";
 import UserStatus from "./components/user/UserStatus";
 
 const User = ({ user, selected, onSelect }) => {
-  const { username, self, imgSrc, connected, hasNewMessages } = user;
+  const { username, self, imgSrc, connected, hasNewMessages, unreadMessages } =
+    user;
 
   return (
     <a
@@ -12,6 +13,7 @@ const User = ({ user, selected, onSelect }) => {
     >
       <div className="flex items-center ms-3 gap-1.5">
         <UserAvatar username={username} imgSrc={imgSrc} />
+
         <div className="px-2 py-3">
           <div className="user-name text-white">
             {username}&nbsp;
@@ -19,7 +21,12 @@ const User = ({ user, selected, onSelect }) => {
               {self ? "(Yourself)" : ""}
             </strong>
           </div>
-          <UserStatus connected={connected} hasNewMessages={hasNewMessages} />
+
+          <UserStatus
+            connected={connected}
+            hasNewMessages={hasNewMessages}
+            unreadMessages={unreadMessages}
+          />
         </div>
       </div>
     </a>
