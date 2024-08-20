@@ -1,5 +1,5 @@
-import UserAvatar from "./components/user/UserAvatar";
-import UserStatus from "./components/user/UserStatus";
+import UserAvatar from "./user/UserAvatar";
+import UserStatus from "./user/UserStatus";
 
 const User = ({ user, selected, onSelect }) => {
   const { username, self, imgSrc, connected, hasNewMessages, unreadMessages } =
@@ -9,6 +9,7 @@ const User = ({ user, selected, onSelect }) => {
     <a
       title={username}
       onClick={onSelect}
+      aria-label={`select ${username}`}
       className={`user transition-all duration-500 me-1.5 ${selected ? "selected" : ""}`}
     >
       <div className="flex items-center ms-3 gap-1.5">

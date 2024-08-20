@@ -1,5 +1,5 @@
 import React from "react";
-import SocketLogo from "../SocketLogo";
+import SocketLogo from "../components/SocketLogo";
 
 const GridContainer = ({ users, selectedUser, children }) => {
   // Iterate over the children and clone each one, passing the selectedUser prop

@@ -1,5 +1,4 @@
-import User from "@/User";
-import SocketLogo from "@/SocketLogo";
+import User from "@/components/User";
 
 const Users = ({ users, setUsers, selectedUser, setSelectedUser }) => {
   const handleSelectUser = (user) => {
@@ -18,15 +17,8 @@ const Users = ({ users, setUsers, selectedUser, setSelectedUser }) => {
       ),
     );
   };
-
   return (
-    <aside className="h-screen text-white w-72 bg-gradient-to-b from-blue-500 to-indigo-600">
-      <header className="ps-3 p-5">
-        <div className="text-4xl text-left">
-          <SocketLogo />
-        </div>
-      </header>
-
+    <>
       <h1 className="m-5 text-lg font-semibold">Users</h1>
       <div className="users ms-3 mb-3 space-y-1 h-[calc(100dvh-180px)] overflow-y-auto">
         {users.map((user) => (
@@ -38,7 +30,7 @@ const Users = ({ users, setUsers, selectedUser, setSelectedUser }) => {
           />
         ))}
       </div>
-    </aside>
+    </>
   );
 };
 

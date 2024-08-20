@@ -1,8 +1,8 @@
-import Users from "@/Users";
 import { socket } from "@/socket";
 import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
-import MessagePanel from "./MessagePanel";
+import MessagePanel from "@/components/MessagePanel";
+import UsersPanel from "@/components/UsersPanel";
 
 // Dummy users data
 const dummyUsers = [
@@ -95,7 +95,7 @@ const Chat = () => {
 
   return (
     <Layout>
-      <Users
+      <UsersPanel
         users={users}
         setUsers={setUsers}
         selectedUser={selectedUser}

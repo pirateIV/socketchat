@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import Chat from "./Chat";
-import SelectUsername from "./SelectUsername";
+import Chat from "./components/Chat";
+import SelectUsername from "./components/SelectUsername";
 import VercelIcon from "./components/icons/VercelIcon";
 import { socket } from "./socket";
 

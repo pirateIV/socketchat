@@ -2,7 +2,7 @@ import { socket } from "@/socket";
 import { twMerge } from "tailwind-merge";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
-import SocketLogoAnimate from "@/SocketLogoAnimate";
+import SocketLogoAnimate from "@/components/SocketLogoAnimate";
 
 const SelectUsername = ({ username, setUsername, setUserSelected }) => {
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
