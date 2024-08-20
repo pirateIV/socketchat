@@ -2,7 +2,7 @@ import Users from "@/Users";
 import { socket } from "@/socket";
 import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
-import SelectedUser from "./SelectedUser";
+import MessagePanel from "./MessagePanel";
 
 // Dummy users data
 const dummyUsers = [
@@ -102,7 +102,7 @@ const Chat = () => {
         setSelectedUser={setSelectedUser}
       />
 
-      <SelectedUser
+      <MessagePanel
         users={users}
         setUsers={setUsers}
         selectedUser={selectedUser}

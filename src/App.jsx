@@ -5,7 +5,7 @@ import VercelIcon from "./components/icons/VercelIcon";
 import { socket } from "./socket";
 
 const App = () => {
-  const [username, setUsername] = useState("User");
+  const [username, setUsername] = useState("");
   const [userSelected, setUserSelected] = useState(false);
 
   useEffect(() => {

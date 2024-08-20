@@ -4,7 +4,7 @@ import { socket } from "@/socket";
 import UserAvatar from "@/components/user/UserAvatar";
 import UserStatus from "@/components/user/UserStatus";
 
-const SelectedUser = ({ selectedUser, users, setUsers }) => {
+const MessagePanel = ({ selectedUser, users, setUsers }) => {
   const {
     userID,
     username,
@@ -169,4 +169,4 @@ const SelectedUser = ({ selectedUser, users, setUsers }) => {
   );
 };
 
-export default SelectedUser;
+export default MessagePanel;
