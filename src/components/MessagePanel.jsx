@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/lib/utils";
 import { socket } from "@/socket";
 import UserAvatar from "@/components/user/UserAvatar";
 import UserStatus from "@/components/user/UserStatus";
@@ -35,6 +35,8 @@ const MessagePanel = ({ selectedUser, users, setUsers }) => {
     return null;
   };
 
+  console.log(selectedUser);
+
   const handlePrivateMessage = (e) => {
     e.preventDefault();
 
@@ -57,8 +59,10 @@ const MessagePanel = ({ selectedUser, users, setUsers }) => {
               message,
               fromSelf: user.userID !== from,
             });
-            if (user !== selectedUser) {
-              user.hasNewMessages = true;
+            if (selectedUser) {
+              if (user.userID !== userID) {
+                user.hasNewMessages = true;
+              }
             }
             return { ...user };
           }
@@ -71,7 +75,7 @@ const MessagePanel = ({ selectedUser, users, setUsers }) => {
   return (
     <>
       {selectedUser && (
-        <div className="bg-chat-bg bg-cover">
+        <div className="bg-chat-bg bg-cover max-h-screen">
           <div className="flex flex-col justify-between bg-gradient-to-b h-full from-black/60 to-gray-900/90 p-5">
             <header className="selected-user-header bg-white shadow-black shadow-sm rounded-md p-4 flex items-center space-x-4">
               <div className="flex-shrink-0">
@@ -137,27 +141,30 @@ const MessagePanel = ({ selectedUser, users, setUsers }) => {
               <div className="mt-5">
                 <form
                   onSubmit={handlePrivateMessage}
-                  className="flex flex-col items-end gap-3 justify-end"
+                  className="relative flex flex-col items-end gap-3 justify-end"
                 >
                   <textarea
+                    rows="4"
                     value={message}
                     autoFocus={true}
                     onKeyDown={handleKeydown}
-                    rows="4"
-                    placeholder={`Message ${self ? "Yourself" : username}`}
                     onChange={(e) => setMessage(e.target.value)}
-                    className={twMerge([
-                      "w-full rounded-md border border-gray-200 transition duration-500 resize-none",
-                      "p-5 text-sm bg-gray-100 outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
-                    ])}
+                    placeholder={`Message ${self ? "Yourself" : username}`}
+                    className={cn(
+                      "w-full text-sm rounded-md border border-gray-200 transition duration-500 resize-none",
+                      "p-5 bg-gray-100 outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
+                    )}
                   ></textarea>
                   <button
-                    title="submit"
-                    disabled={!message}
-                    className="sr-only"
                     type="submit"
+                    disabled={!message}
+                    title="send message"
+                    className={cn(
+                      "inline-flex items-center justify-center absolute top-2 right-2 h-9 w-9 ps-1 text-sm",
+                      "rounded-full tranisition duration-300 text-gray-100 bg-blue-500 disabled:opacity-40",
+                    )}
                   >
-                    Submit
+                    <div icon-send-msg=""></div>
                   </button>
                 </form>
               </div>

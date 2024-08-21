@@ -20,12 +20,12 @@ const Users = ({ users, setUsers, selectedUser, setSelectedUser }) => {
   return (
     <>
       <h1 className="m-5 text-lg font-semibold">Users</h1>
-      <div className="users ms-3 mb-3 space-y-1 h-[calc(100dvh-180px)] overflow-y-auto">
+      <div className="ms-3 mb-3 space-y-1 h-[calc(100dvh-180px)] overflow-y-auto">
         {users.map((user) => (
           <User
             user={user}
             key={user.userID}
-            selected={selectedUser === user}
+            selected={selectedUser?.userID === user.userID}
             onSelect={() => handleSelectUser(user)}
           />
         ))}

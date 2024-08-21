@@ -1,55 +1,55 @@
-import { socket } from "@/socket";
 import { useEffect, useState } from "react";
+import { socket } from "@/socket";
 import Layout from "@/components/Layout";
-import MessagePanel from "@/components/MessagePanel";
 import UsersPanel from "@/components/UsersPanel";
+import MessagePanel from "@/components/MessagePanel";
 
 // Dummy users data
-const dummyUsers = [
-  {
-    userID: 1,
-    self: false,
-    username: "Alice",
-    connected: true,
-    messages: [],
-    hasNewMessages: true,
-    unreadMessages: 0,
-    imgSrc: "https://flowbite.com/docs/images/people/profile-picture-4.jpg",
-  },
-  {
-    userID: 2,
-    self: false,
-    username: "Bob",
-    connected: true,
-    messages: [],
-    hasNewMessages: false,
-    unreadMessages: 0,
-    imgSrc: "",
-  },
-  {
-    userID: 3,
-    self: false,
-    username: "Charlie",
-    connected: false,
-    messages: [],
-    hasNewMessages: false,
-    unreadMessages: 0,
-    imgSrc: "https://flowbite.com/docs/images/people/profile-picture-1.jpg",
-  },
-  {
-    userID: 4,
-    self: false,
-    username: "David",
-    connected: true,
-    messages: [],
-    hasNewMessages: true,
-    unreadMessages: 0,
-    imgSrc: "https://flowbite.com/docs/images/people/profile-picture-2.jpg",
-  },
-];
+// const dummyUsers = [
+//   {
+//     userID: 1,
+//     self: false,
+//     username: "Alice",
+//     connected: true,
+//     messages: [],
+//     hasNewMessages: true,
+//     unreadMessages: 0,
+//     imgSrc: "https://flowbite.com/docs/images/people/profile-picture-4.jpg",
+//   },
+//   {
+//     userID: 2,
+//     self: false,
+//     username: "Bob",
+//     connected: true,
+//     messages: [],
+//     hasNewMessages: false,
+//     unreadMessages: 0,
+//     imgSrc: "",
+//   },
+//   {
+//     userID: 3,
+//     self: false,
+//     username: "Charlie",
+//     connected: false,
+//     messages: [],
+//     hasNewMessages: false,
+//     unreadMessages: 0,
+//     imgSrc: "https://flowbite.com/docs/images/people/profile-picture-1.jpg",
+//   },
+//   {
+//     userID: 4,
+//     self: false,
+//     username: "David",
+//     connected: true,
+//     messages: [],
+//     hasNewMessages: true,
+//     unreadMessages: 0,
+//     imgSrc: "https://flowbite.com/docs/images/people/profile-picture-2.jpg",
+//   },
+// ];
 
 const Chat = () => {
-  const [users, setUsers] = useState([...dummyUsers]);
+  const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
 
   const initReactiveProperties = (user) => {

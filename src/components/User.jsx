@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import UserAvatar from "./user/UserAvatar";
 import UserStatus from "./user/UserStatus";
 
@@ -7,10 +8,14 @@ const User = ({ user, selected, onSelect }) => {
 
   return (
     <a
+      id="user"
       title={username}
       onClick={onSelect}
       aria-label={`select ${username}`}
-      className={`user transition-all duration-500 me-1.5 ${selected ? "selected" : ""}`}
+      className={cn(
+        selected ? "selected" : "",
+        "user me-1.5 transition-all duration-500",
+      )}
     >
       <div className="flex items-center ms-3 gap-1.5">
         <UserAvatar username={username} imgSrc={imgSrc} />

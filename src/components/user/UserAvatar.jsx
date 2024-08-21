@@ -1,7 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { cva } from "class-variance-authority";
-import { twMerge } from "tailwind-merge";
 
 const avatarVariants = cva(
   "relative inline-flex items-center justify-center overflow-hidden bg-cover rounded-full border-2 border-blue-500 bg-gray-100 dark:bg-gray-600",
@@ -24,10 +23,10 @@ const UserAvatar = React.forwardRef(
       <div className={cn(avatarVariants({ size }))} ref={ref}>
         {!imgSrc ? (
           <span
-            className={twMerge([
+            className={cn(
               `${fontSize === "lg" ? "text-2xl" : "text-md"} flex-shrink-0`,
               "capitalize font-medium text-gray-600 dark:text-gray-300",
-            ])}
+            )}
           >
             {username.charAt(0)}
           </span>

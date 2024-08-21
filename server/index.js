@@ -8,19 +8,52 @@ const io = new Server(httpServer, {
   },
 });
 
+import crypto from "crypto";
+const randomId = () => crypto.randomBytes(8).toString("hex");
+
+import { InMemorySessionStore } from "./sessionStore.js";
+const sessionStore = new InMemorySessionStore();
+
 io.use((socket, next) => {
-  const { username } = socket.handshake.auth;
+  const { username, sessionID } = socket.handshake.auth;
+
+  console.log(username, sessionID);
+
+  if (sessionID) {
+    const session = sessionStore.findSession(sessionID);
+    if (session) {
+      socket.sessionID = sessionID;
+      socket.userID = session.userID;
+      socket.username = session.username;
+      return next();
+    }
+  }
 
   if (!username) {
     return next(new Error("Invalid username"));
   }
+
+  socket.sessionID = randomId();
+  socket.userID = randomId();
   socket.username = username;
-  socket.userID = socket.id;
   next();
 });
 
 io.on("connection", (socket) => {
-  console.log(socket.id, "connected");
+  // persist session
+  sessionStore.saveSession(socket.sessionID, {
+    userID: socket.userID,
+    username: socket.username,
+    connected: true,
+  });
+
+  console.log(sessionStore);
+
+  // emit session details
+  socket.emit("session", {
+    sessionID: socket.sessionID,
+    userID: socket.userID,
+  });
 
   const users = [];
   for (let [id, socket] of io.of("/").sockets) {

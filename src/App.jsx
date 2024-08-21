@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import Chat from "./components/Chat";
-import SelectUsername from "./components/SelectUsername";
-import VercelIcon from "./components/icons/VercelIcon";
-import { socket } from "./socket";
+import { socket } from "@/socket";
+import { cn } from "@/lib/utils";
+import Chat from "@/components/Chat";
+import VercelIcon from "@/components/icons/VercelIcon";
+import SelectUsername from "@/components/SelectUsername";
 
 const App = () => {
   const [username, setUsername] = useState("");
@@ -32,20 +33,30 @@ const App = () => {
         />
       )}
 
-      <div className="flex absolute bottom-7 right-7 items-center gap-3">
-        <a href="https://vercel.com" title="Go to vercel">
-          <VercelIcon />
-        </a>
-
-        <a
-          href="https://github.com/pirateIV/socketchat"
-          title="Visit Repository on Github"
+      <div className="flex w-full absolute items-center gap-3 bottom-7">
+        <div
+          className={cn(
+            "flex items-center gap-3 transition duration-300",
+            !userSelected ? "translate-x-[calc(98vw-100%)]" : "translate-x-10",
+          )}
         >
-          <div
-            i-simple-icons:github=""
-            className={`${userSelected ? "text-gray-800" : "text-white"} text-lg transition duration-300 hover:scale-125`}
-          ></div>
-        </a>
+          <a href="https://vercel.com" title="Go to vercel">
+            <VercelIcon />
+          </a>
+
+          <a
+            title="Visit Repository on Github"
+            href="https://github.com/pirateIV/socketchat"
+          >
+            <div
+              className={cn(
+                // userSelected ? "text-gray-800" : "text-white",
+                "text-lg text-white transition duration-300 hover:scale-125",
+              )}
+              i-simple-icons:github=""
+            ></div>
+          </a>
+        </div>
       </div>
     </div>
   );
