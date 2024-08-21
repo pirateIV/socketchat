@@ -55,14 +55,18 @@ io.on("connection", (socket) => {
     userID: socket.userID,
   });
 
-  const users = [];
-  for (let [id, socket] of io.of("/").sockets) {
-    users.push({
-      userID: id,
-      username: socket.username,
-    });
-  }
+  // join the "userID" room
+  socket.join(socket.userID);
 
+  // fetch existing users
+  const users = [];
+  sessionStore.findAllSessions().forEach((session) => {
+    users.push({
+      userID: session.userID,
+      username: session.username,
+      connected: session.connected,
+    });
+  });
   socket.emit("users", users);
 
   socket.broadcast.emit("user connected", {
@@ -70,15 +74,28 @@ io.on("connection", (socket) => {
     username: socket.username,
   });
 
+  // forward the private message to the right recipient (and to other tabs of the sender)
   socket.on("private message", ({ message, to }) => {
-    socket.to(to).emit("private message", {
+    socket.to(to).to(socket.userID).emit("private message", {
       message,
       from: socket.id,
+      to,
     });
   });
 
-  socket.on("disconnect", () => {
-    socket.broadcast.emit("user disconnected", socket.id);
+  // notify users upon disconnection
+  socket.on("disconnect", async () => {
+    const matchingSockets = await io.in(socket.userID).allSockets();
+    const isDisconnected = matchingSockets.size === 0;
+
+    if (isDisconnected) {
+      socket.broadcast.emit("user disconnected", socket.userID);
+      sessionStore.saveSession(socket.sessionID, {
+        userID: socket.userID,
+        username: socket.username,
+        connected: false,
+      });
+    }
   });
 });
 
