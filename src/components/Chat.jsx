@@ -61,7 +61,7 @@ const Chat = () => {
   useEffect(() => {
     socket.on("users", (users) => {
       users.forEach((user) => {
-        user.self = socket.id === user.userID;
+        user.self = user.userID === socket.userID;
         initReactiveProperties(user);
       });
 
@@ -69,23 +69,30 @@ const Chat = () => {
         users.sort((a, b) => {
           if (a.self) return -1;
           if (b.self) return 1;
-          if (a.username < b.username) return -1;
-          return a.username > b.username ? 1 : 0;
+          // if (a.username < b.username) return -1;
+          // return a.username > b.username ? 1 : 0;
+          return a.username.localeCompare(b.username);
         }),
       );
     });
 
     socket.on("user connected", (user) => {
       initReactiveProperties(user);
-      setUsers((prevUsers) => [...prevUsers, user]);
+      setUsers((prevUsers) => {
+        const existingUser = prevUsers.find((u) => u.userID === user.userID);
+        if (existingUser) {
+          existingUser.connected = true;
+          return [...prevUsers];
+        }
+        return [...prevUsers, user];
+      });
     });
 
     socket.on("user disconnected", (id) => {
       setUsers((prevUsers) =>
         prevUsers.map((user) => {
           if (user.userID === id) {
-            user.connected = false;
-            return user;
+            return { ...user, connected: false };
           }
           return user;
         }),

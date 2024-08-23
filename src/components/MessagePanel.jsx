@@ -30,12 +30,10 @@ const MessagePanel = ({ selectedUser, users, setUsers }) => {
     const previousMessage = messages[index - 1];
 
     if (index === 0 || currentMessage.fromSelf !== previousMessage.fromSelf) {
-      return currentMessage.fromSelf ? "Yourself" : sender.username;
+      return currentMessage.fromSelf ? "(Yourself)" : sender.username;
     }
     return null;
   };
-
-  console.log(selectedUser);
 
   const handlePrivateMessage = (e) => {
     e.preventDefault();
@@ -51,18 +49,19 @@ const MessagePanel = ({ selectedUser, users, setUsers }) => {
   };
 
   useEffect(() => {
-    socket.on("private message", ({ message, from }) => {
+    socket.on("private message", ({ message, from, to }) => {
+      console.log({ message, from, to });
       setUsers((prevUsers) =>
         prevUsers.map((user) => {
-          if (user.userID === from) {
+          const fromSelf = socket.userID === from;
+          if (user.userID === (fromSelf ? to : from)) {
             user.messages.push({
               message,
-              fromSelf: user.userID !== from,
+              fromSelf,
+              from,
             });
-            if (selectedUser) {
-              if (user.userID !== userID) {
-                user.hasNewMessages = true;
-              }
+            if (user.userID !== userID) {
+              user.hasNewMessages = true;
             }
             return { ...user };
           }
@@ -107,15 +106,17 @@ const MessagePanel = ({ selectedUser, users, setUsers }) => {
                     key={i}
                     className={`chat ${!msg.fromSelf ? "chat-start" : "chat-end"}`}
                   >
-                    <div className="chat-image avatar">
+                    <div className="chat-image avata">
                       <div className="flex items-center justify-center">
                         <div
                           className={
-                            !displaySender(messages, i) ? "opacity-0" : null
+                            displaySender(messages, i) ? null : "opacity-0"
                           }
                         >
                           <UserAvatar
-                            username={msg.fromSelf ? sender.username : username}
+                            username={
+                              !msg.fromSelf ? sender?.username : username
+                            }
                           />
                         </div>
                       </div>
@@ -128,7 +129,7 @@ const MessagePanel = ({ selectedUser, users, setUsers }) => {
                       )}
                       <time className="text-xs opacity-50">00:00</time>
                     </div>
-                    <div className="chat-bubble text-sm text-white bg-blue-500">
+                    <div className="chat-bubble rounded-md text-sm text-white bg-blue-500 shadow-gray-800/60 shadow-sm">
                       {msg.message}
                     </div>
                     {/* <div className="chat-footer opacity-50">Delivered</div> */}
@@ -147,6 +148,7 @@ const MessagePanel = ({ selectedUser, users, setUsers }) => {
                     rows="4"
                     value={message}
                     autoFocus={true}
+                    autoComplete="true"
                     onKeyDown={handleKeydown}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder={`Message ${self ? "Yourself" : username}`}
@@ -155,17 +157,20 @@ const MessagePanel = ({ selectedUser, users, setUsers }) => {
                       "p-5 bg-gray-100 outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
                     )}
                   ></textarea>
-                  <button
-                    type="submit"
-                    disabled={!message}
-                    title="send message"
-                    className={cn(
-                      "inline-flex items-center justify-center absolute top-2 right-2 h-9 w-9 ps-1 text-sm",
-                      "rounded-full tranisition duration-300 text-gray-100 bg-blue-500 disabled:opacity-40",
-                    )}
-                  >
-                    <div icon-send-msg=""></div>
-                  </button>
+
+                  <div className="absolute bottom-3 right-3">
+                    <button
+                      type="submit"
+                      disabled={!message}
+                      title="send message"
+                      className={cn(
+                        "inline-flex items-center justify-center h-9 w-9 ps-1 text-sm",
+                        "rounded-full tranisition duration-300 text-gray-100 bg-blue-500 disabled:opacity-40",
+                      )}
+                    >
+                      <i icon-send-msg=""></i>
+                    </button>
+                  </div>
                 </form>
               </div>
             </section>

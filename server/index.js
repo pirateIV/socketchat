@@ -70,8 +70,9 @@ io.on("connection", (socket) => {
   socket.emit("users", users);
 
   socket.broadcast.emit("user connected", {
-    userID: socket.id,
+    userID: socket.userID,
     username: socket.username,
+    connected: true,
   });
 
   // forward the private message to the right recipient (and to other tabs of the sender)

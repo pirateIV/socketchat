@@ -10,6 +10,23 @@ const App = () => {
   const [userSelected, setUserSelected] = useState(false);
 
   useEffect(() => {
+    const sessionID = localStorage.getItem("sessionID");
+
+    if (sessionID) {
+      setUserSelected(true);
+      socket.auth = { sessionID };
+      socket.connect();
+    }
+
+    socket.on("session", ({ sessionID, userID }) => {
+      // attach the session to the next reconnection attempt
+      socket.auth = { sessionID };
+      // store it in the localStorage
+      localStorage.setItem("sessionID", sessionID);
+      // save the ID of the user
+      socket.userID = userID;
+    });
+
     socket.on("connect_error", (err) => {
       if (err.message === "Invalid username") {
         setUserSelected(false);
@@ -51,7 +68,7 @@ const App = () => {
             <div
               className={cn(
                 // userSelected ? "text-gray-800" : "text-white",
-                "text-lg text-white transition duration-300 hover:scale-125",
+                "text-lg text-white  transition duration-300 hover:scale-125",
               )}
               i-simple-icons:github=""
             ></div>
