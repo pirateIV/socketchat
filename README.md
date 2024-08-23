@@ -2,7 +2,7 @@
 
 A simple chat application built using [Socket.io](https://socket.io), [React](https://react.dev) and [Node.js](https://nodejs.org).
 
-**Note**: To chat between different users, ensure to create users in different incognito tabs.
+**Note**: To chat between different users, ensure to create users in different incognito tabs or different devices.
 
 - [Live Demo](https://socket-chat-ix.vercel.app/)
 - [Features](#features)
