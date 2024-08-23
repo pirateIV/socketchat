@@ -12,7 +12,7 @@ A simple chat application built using [Socket.io](https://socket.io), [React](ht
 ## Features
 
 - [x] Real-time chat functionality.
-- [x] Save user session.
+- [x] Session based user management.
 - [x] Unread messages indicator.
 
 - [ ] Persistent messages.
