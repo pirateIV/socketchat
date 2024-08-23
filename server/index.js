@@ -79,7 +79,7 @@ io.on("connection", (socket) => {
   socket.on("private message", ({ message, to }) => {
     socket.to(to).to(socket.userID).emit("private message", {
       message,
-      from: socket.id,
+      from: socket.userID,
       to,
     });
   });
