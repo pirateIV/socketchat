@@ -31,7 +31,7 @@ const SelectUsername = ({ username, setUsername, setUserSelected }) => {
       id="select-username"
       className={cn(
         "min-h-screen absolute inset-0 flex flex-col items-center justify-center text-white",
-        "transition-all duration-500 bg-gradient-to-b from-blue-500 to-indigo-600 relative z-50",
+        "transition-all duration-500 bg-gradient-to-b from-blue-500 to-indigo-600 z-50",
         isAnimatingOut ? "opacity-0 scale-95" : "opacity-100 scale-100",
       )}
     >
