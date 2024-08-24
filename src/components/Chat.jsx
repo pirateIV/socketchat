@@ -51,6 +51,7 @@ import MessagePanel from "@/components/MessagePanel";
 const Chat = () => {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [isOpen, setIsOpen] = useState(true);
 
   const initReactiveProperties = (user) => {
     user.connected = true;
@@ -104,6 +105,8 @@ const Chat = () => {
     <Layout>
       <UsersPanel
         users={users}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
         setUsers={setUsers}
         selectedUser={selectedUser}
         setSelectedUser={setSelectedUser}
@@ -111,6 +114,8 @@ const Chat = () => {
 
       <MessagePanel
         users={users}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
         setUsers={setUsers}
         selectedUser={selectedUser}
       />

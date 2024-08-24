@@ -4,7 +4,7 @@ const Layout = ({ children }) => {
   return (
     <div>
       <main className="min-h-screen">
-        <div className="grid grid-cols-auto-1fr">{children}</div>
+        <div className="grid lg:grid-cols-auto-1fr relative">{children}</div>
       </main>
     </div>
   );

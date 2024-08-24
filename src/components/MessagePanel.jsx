@@ -3,8 +3,9 @@ import { cn } from "@/lib/utils";
 import { socket } from "@/socket";
 import UserAvatar from "@/components/user/UserAvatar";
 import UserStatus from "@/components/user/UserStatus";
+import InputIcon from "@/components/custom-ui/inputButton";
 
-const MessagePanel = ({ selectedUser, users, setUsers }) => {
+const MessagePanel = ({ selectedUser, isOpen, setIsOpen, users, setUsers }) => {
   const {
     userID,
     username,
@@ -14,6 +15,7 @@ const MessagePanel = ({ selectedUser, users, setUsers }) => {
     imgSrc,
     hasNewMessages,
   } = selectedUser || {};
+  // console.log("selected user", selectedUser);
 
   const [message, setMessage] = useState("");
 
@@ -48,6 +50,10 @@ const MessagePanel = ({ selectedUser, users, setUsers }) => {
     }
   };
 
+  const handleNewMessages = (user) => {
+    user.hasNewMessages = user.userID !== selectedUser?.userID;
+  };
+
   useEffect(() => {
     socket.on("private message", ({ message, from, to }) => {
       console.log({ message, from, to });
@@ -58,11 +64,8 @@ const MessagePanel = ({ selectedUser, users, setUsers }) => {
             user.messages.push({
               message,
               fromSelf,
-              from,
             });
-            if (user.userID !== userID) {
-              user.hasNewMessages = true;
-            }
+            handleNewMessages(user);
             return { ...user };
           }
           return user;
@@ -74,9 +77,16 @@ const MessagePanel = ({ selectedUser, users, setUsers }) => {
   return (
     <>
       {selectedUser && (
-        <div className="bg-chat-bg bg-cover max-h-screen">
-          <div className="flex flex-col justify-between bg-gradient-to-b h-full from-black/60 to-gray-900/90 p-5">
+        <div className="bg-chat-bg bg-cover h-screen">
+          <div className="flex flex-col justify-between bg-gradient-to-b h-full from-black/70 to-black/90 p-5">
             <header className="selected-user-header bg-white shadow-black shadow-sm rounded-md p-4 flex items-center space-x-4">
+              <button
+                icon-hamburger-menu=""
+                className="block lg:hidden"
+                onClick={() => setIsOpen(!isOpen)}
+              >
+                <span className="sr-only">Open Sidebar</span>
+              </button>
               <div className="flex-shrink-0">
                 <UserAvatar
                   size="lg"
@@ -106,7 +116,7 @@ const MessagePanel = ({ selectedUser, users, setUsers }) => {
                     key={i}
                     className={`chat ${!msg.fromSelf ? "chat-start" : "chat-end"}`}
                   >
-                    <div className="chat-image avata">
+                    <div className="chat-image avatar">
                       <div className="flex items-center justify-center">
                         <div
                           className={
@@ -151,25 +161,38 @@ const MessagePanel = ({ selectedUser, users, setUsers }) => {
                     autoComplete="true"
                     onKeyDown={handleKeydown}
                     onChange={(e) => setMessage(e.target.value)}
-                    placeholder={`Message ${self ? "Yourself" : username}`}
+                    placeholder={`Message ${self ? "Yourself" : username}...`}
                     className={cn(
-                      "w-full text-sm rounded-md border border-gray-200 transition duration-500 resize-none",
-                      "p-5 bg-gray-100 outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
+                      "w-full text-sm text-white p-5 rounded-md transition duration-500 outline-none resize-none",
+                      "bg-gradient-to-b from-[#636261] to-[#555] border-t !border-t-gray-400 !bg-white border border-transparent focus:border-blue-500",
                     )}
                   ></textarea>
 
-                  <div className="absolute bottom-3 right-3">
-                    <button
+                  <div className="absolute bottom-3 right-4 flex items-center gap-3 flex-row-reverse divide-x-reverse divide-x">
+                    <InputIcon
                       type="submit"
+                      icon-send-msg=""
                       disabled={!message}
-                      title="send message"
-                      className={cn(
-                        "inline-flex items-center justify-center h-9 w-9 ps-1 text-sm",
-                        "rounded-full tranisition duration-300 text-gray-100 bg-blue-500 disabled:opacity-40",
-                      )}
-                    >
-                      <i icon-send-msg=""></i>
-                    </button>
+                      title="Send Message"
+                      aria-label="Send Message"
+                      className="disabled:opacity-70 disabled:text-white disabled:bg-white text-blue-500"
+                    />
+
+                    <div className="flex items-center gap-3 space-x-reverse space-x-3">
+                      <InputIcon
+                        type="button"
+                        title="add image"
+                        icon-add-image=""
+                        aria-label="Add Image"
+                      />
+
+                      <InputIcon
+                        type="button"
+                        title="record voice message"
+                        icon-microphone=""
+                        aria-label="Record Voice Message"
+                      />
+                    </div>
                   </div>
                 </form>
               </div>

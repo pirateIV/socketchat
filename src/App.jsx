@@ -50,7 +50,7 @@ const App = () => {
         />
       )}
 
-      <div className="flex w-full absolute items-center gap-3 bottom-7">
+      {/* <div className="flex w-full absolute items-center gap-3 bottom-7">
         <div
           className={cn(
             "flex items-center gap-3 transition duration-300",
@@ -74,7 +74,7 @@ const App = () => {
             ></div>
           </a>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
