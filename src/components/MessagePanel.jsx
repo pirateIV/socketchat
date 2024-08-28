@@ -92,7 +92,7 @@ const MessagePanel = ({ isOpen, setIsOpen }) => {
       {selectedUser && (
         <div className="bg-chat-bg bg-cover h-screen">
           <div className="flex flex-col justify-between bg-gradient-to-b h-full from-black/70 to-black/90 p-5">
-            <header className="selected-user-header bg-white shadow-black shadow-sm rounded-md p-4 flex items-center space-x-4">
+            <header className="selected-user-header shadow-black shadow-sm rounded-md p-4 flex items-center space-x-4">
               <button
                 icon-hamburger-menu=""
                 className="block lg:hidden"

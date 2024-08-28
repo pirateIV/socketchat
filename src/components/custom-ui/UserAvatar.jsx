@@ -19,28 +19,43 @@ const avatarVariants = cva(
 
 const UserAvatar = React.forwardRef(
   (
-    { username, imgSrc, connected, size, fontSize, showConnection = true },
+    {
+      username,
+      connected,
+      showConnection = true,
+      size,
+      fontSize,
+      imgSrc,
+      variant,
+      ...props
+    },
     ref,
   ) => {
     return (
-      <div className={cn(avatarVariants({ size }))} ref={ref}>
-        {!imgSrc ? (
-          <span
-            className={cn(
-              `${fontSize === "lg" ? "text-2xl" : "text-md"} flex-shrink-0`,
-              "capitalize font-medium text-gray-600 dark:text-gray-300",
-            )}
-          >
-            {username.charAt(0)}
-          </span>
-        ) : (
-          <img src={imgSrc} className="flex-shrink-0" alt={username} />
-        )}
+      <div
+        className={cn(avatarVariants({ size, variant }))}
+        ref={ref}
+        {...props}
+      >
+        <div>
+          {!imgSrc ? (
+            <span
+              className={cn(
+                `${fontSize === "lg" ? "text-2xl" : "text-md"} flex-shrink-0`,
+                "capitalize cursor-pointer font-medium text-gray-600 dark:text-gray-300",
+              )}
+            >
+              {username.charAt(0)}
+            </span>
+          ) : (
+            <img src={imgSrc} className="flex-shrink-0" alt={username} />
+          )}
+        </div>
         <span
           className={cn(
-            showConnection ? "" : "hidden",
-            connected ? "bg-green-500" : "bg-red-500",
             "bottom-0 left-6 absolute w-3 h-3 border-2 border-[#5473f0] rounded-full",
+            connected ? "bg-green-500" : "bg-red-500",
+            showConnection ? "" : "hidden",
           )}
         ></span>
       </div>
