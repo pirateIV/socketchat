@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { socket } from "@/socket";
-import UserAvatar from "@/components/user/UserAvatar";
-import UserStatus from "@/components/user/UserStatus";
+import { setSelectedUser, setUsers } from "@/redux/usersSlice";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+
+import UserAvatar from "@/components/custom-ui/UserAvatar";
+import UserStatus from "@/components/users/UserStatus";
 import InputIcon from "@/components/custom-ui/inputButton";
 
-const MessagePanel = ({ selectedUser, isOpen, setIsOpen, users, setUsers }) => {
+const MessagePanel = ({ isOpen, setIsOpen }) => {
+  const dispatch = useAppDispatch();
+  const { users, selectedUser } = useAppSelector(({ user }) => user);
+
   const {
     userID,
     username,
@@ -15,7 +21,7 @@ const MessagePanel = ({ selectedUser, isOpen, setIsOpen, users, setUsers }) => {
     imgSrc,
     hasNewMessages,
   } = selectedUser || {};
-  // console.log("selected user", selectedUser);
+  // const {selectedUser} =
 
   const [message, setMessage] = useState("");
 
@@ -27,6 +33,7 @@ const MessagePanel = ({ selectedUser, isOpen, setIsOpen, users, setUsers }) => {
   };
 
   const sender = users.find((user) => user.self === true && user);
+  console.log(sender);
   const displaySender = (messages, index) => {
     const currentMessage = messages[index];
     const previousMessage = messages[index - 1];
@@ -40,33 +47,39 @@ const MessagePanel = ({ selectedUser, isOpen, setIsOpen, users, setUsers }) => {
   const handlePrivateMessage = (e) => {
     e.preventDefault();
 
+    if (!message.trim()) return;
+
     if (selectedUser) {
       socket.emit("private message", {
         message,
         to: userID,
       });
-      messages.push({ message, fromSelf: true });
+      // messages.push({ message, fromSelf: true });
+      dispatch(
+        setSelectedUser({
+          ...selectedUser,
+          messages: [...messages, { message, fromSelf: true }],
+        }),
+      );
       setMessage("");
     }
   };
 
-  const handleNewMessages = (user) => {
-    user.hasNewMessages = user.userID !== selectedUser?.userID;
-  };
+  // const handleNewMessages = (user) => {};
 
+  console.log(users);
   useEffect(() => {
     socket.on("private message", ({ message, from, to }) => {
       console.log({ message, from, to });
-      setUsers((prevUsers) =>
-        prevUsers.map((user) => {
+      console.log(
+        users.map((user) => {
           const fromSelf = socket.userID === from;
-          if (user.userID === (fromSelf ? to : from)) {
-            user.messages.push({
-              message,
-              fromSelf,
-            });
-            handleNewMessages(user);
-            return { ...user };
+          if (user.userID === fromSelf ? to : from) {
+            return {
+              ...user,
+              messages: [...user.messages, { message, fromSelf }],
+              hasNewMessages: user.userID !== selectedUser?.userID,
+            };
           }
           return user;
         }),
@@ -93,6 +106,7 @@ const MessagePanel = ({ selectedUser, isOpen, setIsOpen, users, setUsers }) => {
                   fontSize="lg"
                   imgSrc={imgSrc}
                   username={username}
+                  showConnection={false}
                 />
               </div>
               <div>
@@ -127,6 +141,7 @@ const MessagePanel = ({ selectedUser, isOpen, setIsOpen, users, setUsers }) => {
                             username={
                               !msg.fromSelf ? sender?.username : username
                             }
+                            showConnection={false}
                           />
                         </div>
                       </div>
@@ -169,14 +184,25 @@ const MessagePanel = ({ selectedUser, isOpen, setIsOpen, users, setUsers }) => {
                   ></textarea>
 
                   <div className="absolute bottom-3 right-4 flex items-center gap-3 flex-row-reverse divide-x-reverse divide-x">
-                    <InputIcon
-                      type="submit"
-                      icon-send-msg=""
-                      disabled={!message}
-                      title="Send Message"
-                      aria-label="Send Message"
-                      className="disabled:opacity-70 disabled:text-white disabled:bg-white text-blue-500"
-                    />
+                    {!message.trim() ? (
+                      <InputIcon
+                        type="submit"
+                        icon-send-msg=""
+                        disabled={!message.trim()}
+                        title="Message must not be empty"
+                        aria-label="Message must not be empty"
+                        className="disabled:opacity-70 disabled:text-white disabled:bg-white text-blue-500"
+                      />
+                    ) : (
+                      <InputIcon
+                        type="submit"
+                        icon-send-msg-fill=""
+                        disabled={!message.trim()}
+                        title="Send Message"
+                        aria-label="Send Message"
+                        className="disabled:opacity-70 disabled:text-white disabled:bg-white text-blue-500"
+                      />
+                    )}
 
                     <div className="flex items-center gap-3 space-x-reverse space-x-3">
                       <InputIcon

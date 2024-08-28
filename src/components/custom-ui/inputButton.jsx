@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { cva } from "class-variance-authority";
 
 const inputIconVariants = cva(
-  "inline-flex items-center justify-center text-sm text-white hover:bg-gray-300/40 p-1 rounded-md",
+  "inline-flex items-center justify-center text-sm text-white hover:opacity-60 p-1 rounded-md",
   {
     variants: {
       variant: {},

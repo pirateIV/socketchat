@@ -1,12 +1,9 @@
-const UserStatus = ({ connected, hasNewMessages, unreadMessages }) => {
+const UserStatus = ({ connected, hasNewMessages, unreadMessages, userID }) => {
   return (
     <div className="user-status">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1">
-          <div className={`icon ${connected ? "connected" : ""} `}></div>
-          <small className="opacity-60">
-            {connected ? "online" : "offline"}
-          </small>
+          <small className="opacity-60">{userID?.substring(0, 7)}...</small>
         </div>
         {hasNewMessages && <div className="new-messages">👶🏾</div>}
       </div>

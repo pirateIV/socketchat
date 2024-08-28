@@ -1,4 +1,4 @@
-import User from "@/components/User";
+import User from "@/components/users/User";
 
 const Sidebar = ({ users, selectedUser, setSelectedUser }) => {
   const handleUserSelect = (user) => {
