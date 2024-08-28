@@ -8,13 +8,11 @@ const Layout = ({ children }) => {
   );
 
   return (
-    <div>
-      <main className="min-h-screen">
-        <div className="grid lg:grid-cols-auto-1fr relative">
-          {childrenWithProps}
-        </div>
-      </main>
-    </div>
+    <main>
+      <div className="grid lg:grid-cols-auto-1fr relative">
+        {childrenWithProps}
+      </div>
+    </main>
   );
 };
 

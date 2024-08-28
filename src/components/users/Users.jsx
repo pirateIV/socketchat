@@ -47,14 +47,22 @@ const Users = () => {
         <hr className="opacity-30" />
 
         <div className="h-[calc(100dvh-195px)] min-h-max ms-3 pb-3 space-y-1 overflow-y-auto">
-          {users.map((user) => (
-            <User
-              user={user}
-              key={user.userID}
-              selected={selectedUser?.userID === user.userID}
-              onSelect={() => handleSelectUser(user)}
-            />
-          ))}
+          {users.length > 0 ? (
+            users.map((user) => (
+              <User
+                user={user}
+                key={user.userID}
+                selected={selectedUser?.userID === user.userID}
+                onSelect={() => handleSelectUser(user)}
+              />
+            ))
+          ) : (
+            <div
+              animate-spin=""
+              i-carbon:circle-dash=""
+              className="mx-auto text-3xl"
+            ></div>
+          )}
         </div>
       </section>
     </>
