@@ -1,11 +1,17 @@
 import { socket } from "@/socket";
 import { useEffect, useState } from "react";
+
+import { cn } from "@/lib/utils";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { setUsername, setUserSelected } from "@/redux/usersSlice";
 import { Input } from "@/components/ui/input";
 import SocketLogoAnimate from "@/components/SocketLogoAnimate";
-import { cn } from "@/lib/utils";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 
-const SelectUsername = ({ username, setUsername, setUserSelected }) => {
+const SelectUsername = () => {
+  const dispatch = useAppDispatch();
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
+  const { username, userSelected } = useAppSelector(({ user }) => user);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -17,7 +23,7 @@ const SelectUsername = ({ username, setUsername, setUserSelected }) => {
   useEffect(() => {
     if (isAnimatingOut) {
       const timer = setTimeout(() => {
-        setUserSelected(true);
+        dispatch(setUserSelected(true));
       }, 500);
 
       return () => clearTimeout(timer);
@@ -26,13 +32,16 @@ const SelectUsername = ({ username, setUsername, setUserSelected }) => {
 
   const isValid = username.length > 2;
 
+  if (userSelected) {
+    return <Navigate to="/chat" replace={true} />;
+  }
   return (
     <div
       id="select-username"
       className={cn(
-        "min-h-screen absolute inset-0 flex flex-col items-center justify-center text-white",
-        "transition-all duration-500 bg-gradient-to-b from-blue-500 to-indigo-600 z-50",
         isAnimatingOut ? "opacity-0 scale-95" : "opacity-100 scale-100",
+        "min-h-screen inset-0 flex flex-col items-center justify-center text-white",
+        "transition-all duration-500 bg-gradient-to-b from-blue-500 to-indigo-600 z-50",
       )}
     >
       <SocketLogoAnimate isValid={isValid} />
@@ -45,20 +54,20 @@ const SelectUsername = ({ username, setUsername, setUserSelected }) => {
           value={username}
           autoFocus={true}
           placeholder="Enter username..."
+          onChange={(e) => dispatch(setUsername(e.target.value))}
           className={cn(
             "text-black px-4 py-3 w-full border border-gray-300 rounded-sm p-2",
             "focus:outline-none focus:ring-2 focus:!ring-blue-500 transition duration-300",
           )}
-          onChange={(e) => setUsername(e.target.value)}
         />
         <button
           type="submit"
           disabled={!isValid}
-          className={cn(
-            "w-full px-4 py-3 rounded-md transition-all duration-500",
-            `${isValid ? "bg-blue-500 scale-105" : "bg-gray-400"}`,
-          )}
           title={isValid ? "Submit" : "Username must be at least 3 characters"}
+          className={cn(
+            isValid ? "bg-blue-500 scale-105" : "bg-gray-400",
+            "w-full px-4 py-3 rounded-md transition-all duration-500",
+          )}
         >
           Submit
         </button>

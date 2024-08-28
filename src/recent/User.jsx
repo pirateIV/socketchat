@@ -16,7 +16,7 @@ const User = ({ user, isSelected, onSelect }) => {
           </p>
         </div>
         <ConnectionStatus isConnected={user.connected} />
-        {user.hasNewMessages && <div className="new-messages">!</div>}
+        {nessages && <div className="new-messages">!</div>}
       </div>
     </div>
   );

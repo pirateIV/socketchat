@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { cva } from "class-variance-authority";
 
 const avatarVariants = cva(
-  "relative inline-flex items-center justify-center overflow-hidden bg-cover rounded-full border-2 border-blue-500 bg-gray-100 dark:bg-gray-600",
+  "relative inline-flex items-center justify-center bg-cover rounded-full border-2 border-blue-500 bg-gray-100 dark:bg-gray-600",
   {
     variants: {
       size: {
@@ -18,7 +18,10 @@ const avatarVariants = cva(
 );
 
 const UserAvatar = React.forwardRef(
-  ({ username, imgSrc, size, fontSize }, ref) => {
+  (
+    { username, imgSrc, connected, size, fontSize, showConnection = true },
+    ref,
+  ) => {
     return (
       <div className={cn(avatarVariants({ size }))} ref={ref}>
         {!imgSrc ? (
@@ -33,6 +36,13 @@ const UserAvatar = React.forwardRef(
         ) : (
           <img src={imgSrc} className="flex-shrink-0" alt={username} />
         )}
+        <span
+          className={cn(
+            showConnection ? "" : "hidden",
+            connected ? "bg-green-500" : "bg-red-500",
+            "bottom-0 left-6 absolute w-3 h-3 border-2 border-[#5473f0] rounded-full",
+          )}
+        ></span>
       </div>
     );
   },
