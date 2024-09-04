@@ -67,7 +67,6 @@ const MessagePanel = ({ isOpen, setIsOpen }) => {
 
   // const handleNewMessages = (user) => {};
 
-  console.log(users);
   useEffect(() => {
     socket.on("private message", ({ message, from, to }) => {
       console.log({ message, from, to });

@@ -10,11 +10,7 @@ const Users = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSelectUser = (user) => {
-    dispatch(
-      setSelectedUser(
-        user.hasNewMessages ? (user.hasNewMessages = false) : user,
-      ),
-    );
+    dispatch(setSelectedUser({ ...user, hasNewMessages: false }));
     dispatch(
       setUsers(
         users.map((u) =>
@@ -31,7 +27,7 @@ const Users = () => {
       <section className="space-y-3">
         <h1 className="m-5 text-lg font-semibold">Users</h1>
 
-        <search className="relative">
+        <div className="relative">
           <input
             type="search"
             value={searchQuery}
@@ -42,7 +38,7 @@ const Users = () => {
           <div className="absolute inset-y-0 start-0 flex items-center justify-center ps-6 text-blue-200 pointer-events-none peer-focus:text-white">
             <SearchIcon /> <span className="sr-only">Search icon</span>
           </div>
-        </search>
+        </div>
 
         <hr className="opacity-30" />
 
