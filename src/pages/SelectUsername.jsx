@@ -7,6 +7,7 @@ import { setUsername, setUserSelected } from "@/redux/usersSlice";
 import { Input } from "@/components/ui/input";
 import SocketLogoAnimate from "@/components/SocketLogoAnimate";
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import UsernameIcon from "@/components/icons/UsernameIcon";
 
 const SelectUsername = () => {
   const dispatch = useAppDispatch();
@@ -49,17 +50,20 @@ const SelectUsername = () => {
         onSubmit={handleSubmit}
         className="space-y-6 shadow-lg bg-white w-80 p-6 rounded-lg"
       >
-        <Input
-          type="text"
-          value={username}
-          autoFocus={true}
-          placeholder="Enter username..."
-          onChange={(e) => dispatch(setUsername(e.target.value))}
-          className={cn(
-            "text-black px-4 py-3 w-full border border-gray-300 rounded-sm p-2",
-            "focus:outline-none focus:ring-2 focus:!ring-blue-500 transition duration-300",
-          )}
-        />
+        <div className="relative flex items-center">
+          <div className="absolute left-2 text-gray-500">
+            <UsernameIcon />
+          </div>
+          <Input
+            type="text"
+            value={username}
+            autoFocus={true}
+            autoComplete="true"
+            placeholder="Enter username..."
+            onChange={(e) => dispatch(setUsername(e.target.value))}
+            className="text-black !ps-9 pe-4 py-3 w-full border border-gray-300 rounded-sm p-2 focus:outline-none focus:ring-2 focus:!ring-blue-500 transition duration-300"
+          />
+        </div>
         <button
           type="submit"
           disabled={!isValid}
