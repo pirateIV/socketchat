@@ -1,50 +1,90 @@
 import { useEffect, useState } from "react";
-
-import { socket } from "@/socket";
 import { cn } from "@/lib/utils";
-import {
-  setMessagesPerUser,
-  setSelectedUserMessages,
-} from "@/redux/usersSlice";
+import { socket } from "@/socket";
+import { setSelectedUser, setUsers } from "@/redux/usersSlice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import UserStatus from "@/components/users/UserStatus";
+
 import UserAvatar from "@/components/custom-ui/UserAvatar";
+import UserStatus from "@/components/users/UserStatus";
 import InputIcon from "@/components/custom-ui/inputButton";
 
 const MessagePanel = ({ isOpen, setIsOpen }) => {
   const dispatch = useAppDispatch();
-  const { selectedUser } = useAppSelector(({ user }) => user);
+  const { users, selectedUser } = useAppSelector(({ user }) => user);
 
-  const { username, connected, self, imgSrc, messages, hasNewMessages } =
-    selectedUser || {};
+  const {
+    userID,
+    username,
+    connected,
+    self,
+    messages,
+    imgSrc,
+    hasNewMessages,
+  } = selectedUser || {};
+  // const {selectedUser} =
 
   const [message, setMessage] = useState("");
 
-  // const handleKeydown = (e) => {
-  //   if (e.key === "Enter" && !e.shiftKey) {
-  //     e.preventDefault();
-  //     handlePrivateMessage(e);
-  //   }
-  // };
+  const handleKeydown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handlePrivateMessage(e);
+    }
+  };
+
+  const sender = users.find((user) => user.self === true && user);
+  console.log(sender);
+  const displaySender = (messages, index) => {
+    const currentMessage = messages[index];
+    const previousMessage = messages[index - 1];
+
+    if (index === 0 || currentMessage.fromSelf !== previousMessage.fromSelf) {
+      return currentMessage.fromSelf ? "(Yourself)" : sender.username;
+    }
+    return null;
+  };
 
   const handlePrivateMessage = (e) => {
     e.preventDefault();
-    dispatch(
-      setSelectedUserMessages({
+
+    if (!message.trim()) return;
+
+    if (selectedUser) {
+      socket.emit("private message", {
         message,
-        from: socket.userID,
-        fromSelf: selectedUser.userID === socket.userID,
-      }),
-    );
-    socket.emit("private message", { message, to: selectedUser.userID });
+        to: userID,
+      });
+      // messages.push({ message, fromSelf: true });
+      dispatch(
+        setSelectedUser({
+          ...selectedUser,
+          messages: [...messages, { message, fromSelf: true }],
+        }),
+      );
+      setMessage("");
+    }
   };
+
+  // const handleNewMessages = (user) => {};
 
   useEffect(() => {
     socket.on("private message", ({ message, from, to }) => {
-      dispatch(setMessagesPerUser({ message, from, to }));
       console.log({ message, from, to });
+      console.log(
+        users.map((user) => {
+          const fromSelf = socket.userID === from;
+          if (user.userID === fromSelf ? to : from) {
+            return {
+              ...user,
+              messages: [...user.messages, { message, fromSelf }],
+              hasNewMessages: user.userID !== selectedUser?.userID,
+            };
+          }
+          return user;
+        }),
+      );
     });
-  }, []);
+  }, [socket]);
 
   return (
     <>
@@ -84,7 +124,7 @@ const MessagePanel = ({ isOpen, setIsOpen }) => {
 
             <section className="flex-auto h-40 overflow-y-auto">
               <ul className="messages">
-                {messages?.map((msg, i) => (
+                {messages.map((msg, i) => (
                   <li
                     key={i}
                     className={`chat ${!msg.fromSelf ? "chat-start" : "chat-end"}`}
@@ -92,23 +132,25 @@ const MessagePanel = ({ isOpen, setIsOpen }) => {
                     <div className="chat-image avatar">
                       <div className="flex items-center justify-center">
                         <div
-                        // className={
-                        //   displaySender(messages, i) ? null : "opacity-0"
-                        // }
+                          className={
+                            displaySender(messages, i) ? null : "opacity-0"
+                          }
                         >
-                          {/* <UserAvatar
+                          <UserAvatar
                             username={
                               !msg.fromSelf ? sender?.username : username
                             }
-                            showConnection={false} */}
-                          {/* /> */}
+                            showConnection={false}
+                          />
                         </div>
                       </div>
                     </div>
                     <div className="chat-header text-white">
-                      {/* {displaySender(messages, i) && ( */}
-                      <span>{msg.fromSelf ? "Yourself" : username}&nbsp;</span>
-                      {/* // )} */}
+                      {displaySender(messages, i) && (
+                        <span>
+                          {msg.fromSelf ? "Yourself" : username}&nbsp;
+                        </span>
+                      )}
                       <time className="text-xs opacity-50">00:00</time>
                     </div>
                     <div className="chat-bubble rounded-md text-sm text-white bg-blue-500 shadow-gray-800/60 shadow-sm">
@@ -123,38 +165,43 @@ const MessagePanel = ({ isOpen, setIsOpen }) => {
             <section>
               <div className="mt-5">
                 <form
-                  onSubmit={(e) => handlePrivateMessage(e)}
+                  onSubmit={handlePrivateMessage}
                   className="relative flex flex-col items-end gap-3 justify-end"
                 >
                   <textarea
-                    onChange={(e) => setMessage(e.target.value)}
-                    rows="4"
-                    className="block w-full text-white p-3"
-                    id=""
-                  ></textarea>
-                  {/* {<textarea
                     rows="4"
                     value={message}
                     autoFocus={true}
                     autoComplete="true"
-                    // onKeyDown={handleKeydown}
+                    onKeyDown={handleKeydown}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder={`Message ${self ? "Yourself" : username}...`}
                     className={cn(
                       "w-full text-sm text-white p-5 rounded-md transition duration-500 outline-none resize-none",
                       "bg-gradient-to-b from-[#636261] to-[#555] border-t !border-t-gray-400 !bg-white border border-transparent focus:border-blue-500",
                     )}
-                  ></textarea>} */}
+                  ></textarea>
 
                   <div className="absolute bottom-3 right-4 flex items-center gap-3 flex-row-reverse divide-x-reverse divide-x">
-                    <InputIcon
-                      type="submit"
-                      icon-send-msg-fill=""
-                      disabled={!message.trim()}
-                      title="Send Message"
-                      aria-label="Send Message"
-                      className="disabled:opacity-70 disabled:text-white disabled:bg-white text-blue-500"
-                    />
+                    {!message.trim() ? (
+                      <InputIcon
+                        type="submit"
+                        icon-send-msg=""
+                        disabled={!message.trim()}
+                        title="Message must not be empty"
+                        aria-label="Message must not be empty"
+                        className="disabled:opacity-70 disabled:text-white disabled:bg-white text-blue-500"
+                      />
+                    ) : (
+                      <InputIcon
+                        type="submit"
+                        icon-send-msg-fill=""
+                        disabled={!message.trim()}
+                        title="Send Message"
+                        aria-label="Send Message"
+                        className="disabled:opacity-70 disabled:text-white disabled:bg-white text-blue-500"
+                      />
+                    )}
 
                     <div className="flex items-center gap-3 space-x-reverse space-x-3">
                       <InputIcon
