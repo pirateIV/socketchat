@@ -10,16 +10,8 @@ const Users = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSelectUser = (user) => {
-    dispatch(setSelectedUser({ ...user, hasNewMessages: false }));
-    dispatch(
-      setUsers(
-        users.map((u) =>
-          u.userID === selectedUser?.userID
-            ? { ...u, hasNewMessages: false }
-            : u,
-        ),
-      ),
-    );
+    dispatch(setSelectedUser(user));
+    console.log(user);
   };
 
   return (
