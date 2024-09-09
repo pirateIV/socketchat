@@ -11,22 +11,22 @@ import MessagePanel from "@/components/MessagePanel";
 const Chat = () => {
   const dispatch = useAppDispatch();
 
-  const initReactiveProperties = (user) => ({
-    ...user,
-    connected: user.connected,
-    self: user.userID === socket.userID,
-    messages: [],
-    hasNewMessages: false,
-  });
+  const initReactiveProperties = (user) => ({ ...user, hasNewMessages: false });
 
   useEffect(() => {
     socket.on("users", (users) => {
-      const initUsers = users.map(initReactiveProperties);
-      dispatch(setUsers(initUsers));
+      users.forEach((user) => {
+        user.messages.forEach((message) => {
+          message.fromSelf = message.from === socket.userID;
+        });
+        user.self = user.userID === socket.userID;
+        user.hasNewMessages = false;
+      });
+      dispatch(setUsers(users));
     });
 
     socket.on("user connected", (user) => {
-      dispatch(connectUser({ ...user, ...initReactiveProperties(user) }));
+      dispatch(connectUser({ ...initReactiveProperties(user) }));
     });
 
     socket.on("user disconnected", (id) => {

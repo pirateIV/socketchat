@@ -19,7 +19,7 @@ const MessagePanel = ({ isOpen, setIsOpen }) => {
     selectedUser || {};
 
   const [message, setMessage] = useState("");
-  console.log(socket.userID);
+  console.log(messages);
 
   // const handleKeydown = (e) => {
   //   if (e.key === "Enter" && !e.shiftKey) {
@@ -93,7 +93,7 @@ const MessagePanel = ({ isOpen, setIsOpen }) => {
               </div>
             </header>
 
-            <section className="flex-auto pt-3 h-40 overflow-y-auto">
+            <section className="flex-auto pt-3 h-40 overflow-x-hidden overflow-y-scroll">
               <ul className="messages">
                 {messages?.map((msg, index) => (
                   <li

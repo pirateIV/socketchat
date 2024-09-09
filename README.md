@@ -15,7 +15,7 @@ A simple chat application built using [Socket.io](https://socket.io), [React](ht
 - [x] Session based user management.
 - [x] Unread messages indicator.
 
-- [ ] Persistent messages.
+- [x] Persistent messages.
 - [ ] Group Chat functionality.
 - [ ] Push Notification for new messages.
 - [ ] Add [Redis](https://redis.io/) for scaling Socket.io servers.

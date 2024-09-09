@@ -76,6 +76,7 @@ const userSlice = createSlice({
       state.selectedUser.messages.push({ message, from, fromSelf });
     },
     setSelectedUserMessages(state, action) {
+      console.log(action.payload);
       state.selectedUser.messages.push(action.payload);
     },
   },

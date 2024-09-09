@@ -88,6 +88,7 @@ io.on("connection", (socket) => {
     userID: socket.userID,
     username: socket.username,
     connected: true,
+    messages: [],
   });
 
   // forward the private message to the right recipient (and to other tabs of the sender)
