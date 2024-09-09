@@ -34,9 +34,6 @@ const userSlice = createSlice({
     setUser(state, action) {
       state.users = [...state.users, action.payload];
     },
-    setMessages(state, action) {
-      const message = action.payload;
-    },
     setUsers(state, action) {
       state.users = [...state.users, ...action.payload];
     },
@@ -61,7 +58,7 @@ const userSlice = createSlice({
       );
     },
     setMessagesPerUser(state, action) {
-      const { message, from, to } = action.payload;
+      const { message, from, to, sentAt } = action.payload;
       const fromSelf = from === socket.userID;
       console.log(fromSelf);
 
@@ -73,9 +70,10 @@ const userSlice = createSlice({
         return user;
       });
 
-      state.selectedUser.messages.push({ message, from, fromSelf });
+      state.selectedUser.messages.push({ message, from, fromSelf, sentAt });
     },
     setSelectedUserMessages(state, action) {
+      console.log(action.payload);
       state.selectedUser.messages.push(action.payload);
     },
   },

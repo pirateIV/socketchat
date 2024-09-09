@@ -10,6 +10,7 @@ import UserStatus from "@/components/users/UserStatus";
 import UserAvatar from "@/components/custom-ui/UserAvatar";
 import InputIcon from "@/components/custom-ui/inputButton";
 import { cn } from "@/lib/utils";
+import { formatTime } from "@/helpers";
 
 const MessagePanel = ({ isOpen, setIsOpen }) => {
   const dispatch = useAppDispatch();
@@ -19,7 +20,6 @@ const MessagePanel = ({ isOpen, setIsOpen }) => {
     selectedUser || {};
 
   const [message, setMessage] = useState("");
-  console.log(socket.userID);
 
   // const handleKeydown = (e) => {
   //   if (e.key === "Enter" && !e.shiftKey) {
@@ -30,14 +30,22 @@ const MessagePanel = ({ isOpen, setIsOpen }) => {
 
   const handlePrivateMessage = (e) => {
     e.preventDefault();
-    dispatch(
-      setSelectedUserMessages({
-        message,
-        from: socket.userID,
-        fromSelf: true,
-      }),
-    );
-    socket.emit("private message", { message, to: selectedUser.userID });
+    const sentAt = new Date();
+
+    const userMessage = {
+      message,
+      from: socket.userID,
+      fromSelf: true,
+      sentAt,
+    };
+
+    dispatch(setSelectedUserMessages(userMessage));
+
+    socket.emit("private message", {
+      message,
+      to: selectedUser.userID,
+      sentAt,
+    });
   };
 
   useEffect(() => {
@@ -93,7 +101,7 @@ const MessagePanel = ({ isOpen, setIsOpen }) => {
               </div>
             </header>
 
-            <section className="flex-auto pt-3 h-40 overflow-y-auto">
+            <section className="flex-auto pt-3 h-40 overflow-x-hidden overflow-y-scroll">
               <ul className="messages">
                 {messages?.map((msg, index) => (
                   <li
@@ -128,7 +136,7 @@ const MessagePanel = ({ isOpen, setIsOpen }) => {
                         {msg.message}
                       </div>
                       <time className="absolute text-[10px] bottom-0.5 right-3 opacity-70">
-                        00:00
+                        {formatTime(msg.sentAt)}
                       </time>
                     </div>
                   </li>
@@ -142,27 +150,19 @@ const MessagePanel = ({ isOpen, setIsOpen }) => {
                   onSubmit={(e) => handlePrivateMessage(e)}
                   className="relative flex flex-col items-end gap-3 justify-end"
                 >
-                  {/* <textarea
-                    onChange={(e) => setMessage(e.target.value)}
+                  <textarea
                     rows="4"
-                    className="block w-full text-white p-3"
-                    id=""
-                  ></textarea> */}
-                  {
-                    <textarea
-                      rows="4"
-                      value={message}
-                      autoFocus={true}
-                      autoComplete="true"
-                      // onKeyDown={handleKeydown}
-                      onChange={(e) => setMessage(e.target.value)}
-                      placeholder={`Message ${self ? "Yourself" : username}...`}
-                      className={cn(
-                        "w-full text-sm text-white p-5 rounded-md transition duration-500 outline-none resize-none",
-                        "bg-gradient-to-b from-[#636261] to-[#555] border-t !border-t-gray-400 !bg-white border border-transparent focus:border-blue-500",
-                      )}
-                    ></textarea>
-                  }
+                    value={message}
+                    autoFocus={true}
+                    autoComplete="true"
+                    // onKeyDown={handleKeydown}
+                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder={`Message ${self ? "Yourself" : username}...`}
+                    className={cn(
+                      "w-full text-sm text-white p-5 rounded-md transition duration-500 outline-none resize-none",
+                      "bg-gradient-to-b from-[#636261] to-[#555] border-t !border-t-gray-400 !bg-white border border-transparent focus:border-blue-500",
+                    )}
+                  ></textarea>
 
                   <div className="absolute bottom-3 right-4 flex items-center gap-3 flex-row-reverse divide-x-reverse divide-x">
                     <InputIcon

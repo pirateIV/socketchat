@@ -88,11 +88,12 @@ io.on("connection", (socket) => {
     userID: socket.userID,
     username: socket.username,
     connected: true,
+    messages: [],
   });
 
   // forward the private message to the right recipient (and to other tabs of the sender)
-  socket.on("private message", ({ message, to }) => {
-    const msg = { message, from: socket.userID, to };
+  socket.on("private message", ({ message, to, sentAt }) => {
+    const msg = { message, from: socket.userID, to, sentAt };
 
     socket.to(to).to(socket.userID).emit("private message", msg);
     messageStore.saveMessage(msg);

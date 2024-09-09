@@ -11,7 +11,7 @@ const Users = () => {
 
   const handleSelectUser = (user) => {
     dispatch(setSelectedUser(user));
-    console.log(user);
+    console.log(selectedUser);
   };
 
   return (
