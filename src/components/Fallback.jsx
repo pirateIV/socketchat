@@ -2,7 +2,6 @@ import { useAppSelector } from "@/app/hooks";
 
 const Fallback = ({ isOpen, setIsOpen }) => {
   const { selectedUser } = useAppSelector(({ user }) => user);
-  console.log(selectedUser);
 
   const handleFallback = () => {
     if (selectedUser) {

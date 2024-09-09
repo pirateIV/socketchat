@@ -7,6 +7,7 @@ const avatarVariants = cva(
   {
     variants: {
       size: {
+        sm: "w-9 h-9",
         default: "w-10 h-10",
         lg: "w-16 h-16",
       },
@@ -16,6 +17,12 @@ const avatarVariants = cva(
     },
   },
 );
+
+const fontSizes = {
+  sm: "text-sm",
+  default: "text-md",
+  lg: "text-2xl",
+};
 
 const UserAvatar = React.forwardRef(
   (
@@ -41,7 +48,7 @@ const UserAvatar = React.forwardRef(
           {!imgSrc ? (
             <span
               className={cn(
-                `${fontSize === "lg" ? "text-2xl" : "text-md"} flex-shrink-0`,
+                `${fontSizes[fontSize]} flex-shrink-0`,
                 "capitalize cursor-pointer font-medium text-gray-600 dark:text-gray-300",
               )}
             >
