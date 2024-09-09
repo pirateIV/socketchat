@@ -60,34 +60,23 @@ const userSlice = createSlice({
         user.userID === action.payload ? { ...user, connected: false } : user,
       );
     },
-    setSelectedUserMessages(state, action) {
-      const message = action.payload;
-      state.selectedUser.messages.push(message);
-      // update the users state
-      // state.users = state.users.map((user) => {
-      //   if (user.userID === state.selectedUser.userID) {
-      //     user.messages.push(message);
-      //   }
-      //   return user;
-      // });
-    },
     setMessagesPerUser(state, action) {
       const { message, from, to } = action.payload;
-      console.log(action.payload);
-      const fromSelf = socket.userID === from;
+      const fromSelf = from === socket.userID;
+      console.log(fromSelf);
+
       state.users = state.users.map((user) => {
-        if (user.userID === fromSelf ? from : to) {
-          // return {
-          //   ...user,
-          //   messages: [...user.messages, message],
-          //   hasNewMessages: user.userID !== state.selectedUser.userID,
-          // };
+        if (user.userID === (fromSelf ? to : from)) {
           user.messages.push({ message, from, fromSelf });
-          user.hasNewMessages = user.userID !== state.selectedUser.userID;
-          return user;
+          user.hasNewMessages = state.selectedUser === from;
         }
         return user;
       });
+
+      state.selectedUser.messages.push({ message, from, fromSelf });
+    },
+    setSelectedUserMessages(state, action) {
+      state.selectedUser.messages.push(action.payload);
     },
   },
 });
